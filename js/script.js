@@ -42,15 +42,19 @@ function filterList(e) {
   let filteredList;
   let valueF = e.target.value;
   const filterBy = e.target.dataset.filter;
-  if (valueF === "all") {
-    filteredList = arrayOfStudentObject;
-  } else {
+  if (filterBy !== "responsibility") {
     // console.log(filterBy);
     if (filterBy === "house") {
       valueF = capitalizeString(valueF);
     }
     // console.log(valueF);
     filteredList = arrayOfStudentObject.filter((student) => student[filterBy] === valueF);
+  } else {
+    filteredList = arrayOfStudentObject.filter((student) => student[valueF]);
+  }
+
+  if (valueF === "all") {
+    filteredList = arrayOfStudentObject;
   }
   // console.log(filteredList);
   displayList(filteredList);
@@ -313,19 +317,16 @@ function displayModalInfo(e) {
   copy.querySelector(".lastname").textContent = studentObj.lastName;
   copy.querySelector(".middlename").textContent = studentObj.middleName;
   copy.querySelector(".nickname").textContent = studentObj.nickName;
+  //display blood type
   if (studentObj.bloodType) {
     copy.querySelector(`#${studentObj.bloodType}`).checked = true;
   }
+
+  //display inquisitor badge
   if (studentObj.inquisitor) {
     copy.querySelector(".inquisitorial").style.filter = `saturate(1) opacity(1)`;
   }
-  if (studentObj.prefect) {
-    copy.querySelector(".prefect").style.filter = `saturate(1) opacity(1)`;
-  }
-  if (studentObj.quidditchPlayer) {
-    copy.querySelector(".quidditch").style.filter = `saturate(1) opacity(1)`;
-  }
-
+  //inquisitorial electables
   if (studentObj.house === "Slytherin" || studentObj.bloodType === "pure") {
     copy.querySelector(".inquisitorial").style.backgroundImage = `url(../assets/inquisitorial_badge.png)`;
     copy.querySelector(".inquisitorial").style.pointerEvents = "all";
@@ -335,6 +336,23 @@ function displayModalInfo(e) {
       displayModalInfo(e);
     });
   }
+
+  //display prefect shild
+  if (studentObj.prefect) {
+    copy.querySelector(".prefect").style.filter = `saturate(1) opacity(1)`;
+  }
+
+  //diplay quidditch logo
+  if (studentObj.quidditchPlayer) {
+    copy.querySelector(".quidditch").style.filter = `saturate(1) opacity(1)`;
+  }
+  //select a quidditch player
+  copy.querySelector(".quidditch").addEventListener("click", function () {
+    studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
+    removeModal();
+    displayModalInfo(e);
+  });
+
   //grab parent
   const parent = document.querySelector("main");
   //append
