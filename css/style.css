@@ -1,0 +1,329 @@
+@import url("https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Emilys+Candy&family=Fredericka+the+Great&family=Life+Savers:wght@400;700;800&family=Rakkas&family=Underdog&family=Unkempt:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Germania+One&family=Rye&family=Yatra+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Special+Elite&display=swap");
+
+/* font-family: "Emilys Candy", cursive;
+  font-family: "Fredericka the Great", cursive;
+  font-family: "Life Savers", cursive;
+  font-family: "Rakkas", cursive; */
+/* font-family: "Underdog", cursive;
+  font-family: "Unkempt", cursive; */
+
+:root {
+  --headerheight: 100px;
+  --houseFirstLetter: "Germania One", cursive;
+  --bodyFont: "Bubblegum Sans", cursive;
+  --machineFont: "Special Elite", cursive;
+}
+
+body {
+  font-family: "Bubblegum Sans", cursive;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: rgb(58, 56, 55);
+  color: antiquewhite;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  height: var(--headerheight);
+  top: 0;
+  left: 0;
+  z-index: 5;
+  background-color: rgb(58, 56, 55);
+}
+
+.filtersWrapper {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.searchwrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+#search-names {
+  width: 30%;
+}
+
+.filter-label {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  font-size: 1.5rem;
+}
+
+main {
+  margin-top: calc(var(--headerheight) + 2rem);
+}
+
+.logo {
+  width: 100%;
+}
+
+.logo img {
+  width: 150px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+/*-----------student list----------*/
+#student-list {
+  list-style: none;
+}
+
+#student-list li {
+  cursor: pointer;
+  width: 40%;
+  padding: 0.2rem 0 0 2rem;
+  font-size: 1.5rem;
+}
+
+#student-list > li + li {
+  margin-top: 1rem;
+}
+
+li.gryffindor {
+  background-color: #660d10;
+  color: #e19f27;
+}
+
+li.hufflepuff {
+  background-color: #201e19;
+  color: #f99e30;
+}
+
+li.ravenclaw {
+  background-color: #193755;
+  color: #8e5223;
+}
+
+li.slytherin {
+  background-color: #31733a;
+  color: #cccccb;
+}
+
+/*--------------------------------*/
+
+/*------modal student card------*/
+
+.studentmodal {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(82, 69, 82, 0.945);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.studentcardwrapper {
+  width: 40%;
+  background-color: rgb(216, 216, 206);
+
+  /* transition: 1.5s;
+  transform: rotateX(90deg) scale(0.4); */
+}
+
+.bar {
+  width: 100%;
+  height: 15px;
+  background-color: rgb(124, 43, 43);
+  position: relative;
+}
+.tab {
+  width: 20%;
+  height: 35px;
+  position: absolute;
+  top: -35px;
+  right: 0;
+  background-color: rgb(124, 43, 43);
+  border-radius: 8px 8px 0 0;
+}
+
+.studentcard {
+  position: relative;
+}
+
+.infographies {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.cresthouseiconswrapper {
+  padding: 1rem 2rem;
+}
+
+.crestnamewrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.crest {
+  width: 100px;
+  height: 100px;
+  background-image: url(../assets/griffindor_crest_monoChrom.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.housename h1 {
+  font-family: var(--bodyFont);
+  font-weight: 500;
+  color: rgb(46, 45, 45);
+  font-size: 3.5rem;
+  margin: 0;
+}
+
+.housename .firstLetter {
+  font-family: var(--houseFirstLetter);
+  color: rgb(129, 35, 35);
+  font-size: 5rem;
+}
+
+.iconswrapper {
+  display: flex;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: saturate(0.15) opacity(0.5);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.inquisitorial {
+  background-image: url(../assets/inquisitorial_badge.png);
+}
+
+.quidditch {
+  width: 80px;
+  background-image: url(../assets/quidditch.png);
+}
+
+:is(.inquisitorial, .quidditch, .prefect):hover {
+  filter: saturate(1) opacity(1);
+}
+
+.prefect {
+  background-image: url(../assets/prefect.png);
+}
+
+.expelled {
+  background-image: url(../assets/stamp.png);
+  filter: saturate(1);
+}
+
+.expelled:hover {
+  background-image: url(../assets/expelled.png);
+  filter: saturate(1);
+}
+
+.studentpic {
+  width: 150px;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-image: url(../assets/students/undefine.png);
+  position: absolute;
+  right: 2rem;
+  top: 60%;
+}
+
+.bardoublecolor {
+  width: 100%;
+  height: 10px;
+  display: flex;
+}
+
+.rect {
+  width: 25%;
+  height: 100%;
+  background-color: rgb(124, 43, 43);
+}
+.color2 {
+  background-color: rgb(216, 201, 118);
+}
+
+.data {
+  padding: 2rem;
+  font-size: 1.3rem;
+}
+
+.data span {
+  display: block;
+  border-bottom: solid 1px black;
+  width: 200px;
+  font-family: var(--machineFont);
+  margin-top: 0.2rem;
+  font-size: 1.1rem;
+}
+
+.bloodType {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.bloodwrapper input[type="radio"] {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.bloodwrapper input[type="radio"]::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: rgb(216, 216, 206);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: solid 1px black;
+}
+
+.bloodwrapper input[type="radio"]:checked:after {
+  content: "X";
+  font-size: 1.1rem;
+  font-family: var(--machineFont);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.expelledStamp.stamped {
+  width: 60%;
+  height: 60%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url(../assets/expelled.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/*------modal student card ends------------*/

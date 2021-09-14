@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hogwarts Student List</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="filtersWrapper">
+        <label for="filter-by-house" class="filter-label"
+          >House
+          <select name="filter-by-house" id="filter-by-house" data-filter="house">
+            <option value="all" class="option1">All</option>
+            <option value="gryffindor" class="option2">gryffindor</option>
+            <option value="hufflepuff" class="option3">hufflepuff</option>
+            <option value="ravenclaw" class="option4">ravenclaw</option>
+            <option value="slytherin" class="option5">slytherin</option>
+          </select>
+        </label>
+
+        <label for="filter-by-responsibily" class="filter-label"
+          >Responsability
+          <select name="filter-by-responsibily" id="filter-by-responsibily">
+            <option value="all" class="option1">All</option>
+            <option value="prefects">prefects</option>
+            <option value="quidditch players">quidditch players</option>
+            <option value="inquisitorial squad">inquisitorial squad</option>
+          </select>
+        </label>
+
+        <label for="filter-by-blood" class="filter-label"
+          >Blood
+          <select name="filter-by-blood" id="filter-by-blood" data-filter="bloodType">
+            <option value="all" class="option1">All</option>
+            <option value="pure">pure blood</option>
+            <option value="half">half blood</option>
+            <option value="muggle">muggle</option>
+          </select>
+        </label>
+
+        <button>expelled students</button>
+      </div>
+      <div class="searchwrapper">
+        <label for="search-names">search</label>
+        <input type="search" name="search-names" id="search-names" />
+      </div>
+    </header>
+    <main>
+      <div class="logo">
+        <img src="assets/hogwarts-crest.png" alt="hogwarts crest" />
+      </div>
+      <div class="list-container">
+        <ul id="student-list"></ul>
+      </div>
+    </main>
+
+    <template id="studentModalTemplate">
+      <!-- here start the modal -->
+      <div class="studentmodal">
+        <div class="studentcardwrapper">
+          <div class="bar">
+            <div class="tab"></div>
+          </div>
+          <div class="studentcard">
+            <div class="infographies">
+              <div class="cresthouseiconswrapper">
+                <div class="crestnamewrapper">
+                  <div class="crest"></div>
+                  <div class="housename">
+                    <h1><span class="firstLetter">G</span>ryffindor</h1>
+                  </div>
+                </div>
+                <div class="iconswrapper">
+                  <div class="icon inquisitorial"></div>
+                  <div class="icon quidditch"></div>
+                  <div class="icon prefect"></div>
+                  <div class="icon expelled"></div>
+                </div>
+              </div>
+              <div class="studentpic"></div>
+            </div>
+            <div class="bardoublecolor">
+              <div class="rect color1"></div>
+              <div class="rect color2"></div>
+              <div class="rect color1"></div>
+              <div class="rect color2"></div>
+            </div>
+            <section class="data">
+              <p>First Name:<span class="firstname">Miguel</span></p>
+              <p>Middle Name:<span class="middlename">German</span></p>
+              <p>Last Name:<span class="lastname">Gonzalez</span></p>
+              <p>Nick Name:<span class="nickname">Mich</span></p>
+              <div class="bloodType">
+                <p>Blood Type:</p>
+                <div class="bloodwrapper">
+                  <label for="pure"><input type="radio" name="blood" id="pure" checked="checked" />pure</label>
+                  <label for="half"><input type="radio" name="blood" id="half" />half</label>
+                  <label for="muggle"><input type="radio" name="blood" id="muggle" />muggle</label>
+                </div>
+              </div>
+            </section>
+            <div class="expelledStamp stamped"></div>
+          </div>
+        </div>
+      </div>
+      <!-- here ends the modal -->
+    </template>
+
+    <footer></footer>
+    <script src="js/script.js"></script>
+  </body>
+</html>
