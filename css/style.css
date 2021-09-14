@@ -11,7 +11,7 @@
   font-family: "Unkempt", cursive; */
 
 :root {
-  --headerheight: 100px;
+  --headerheight: 150px;
   --houseFirstLetter: "Germania One", cursive;
   --bodyFont: "Bubblegum Sans", cursive;
   --machineFont: "Special Elite", cursive;
@@ -47,7 +47,6 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1rem 0;
   width: 100%;
 }
 

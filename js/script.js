@@ -271,7 +271,9 @@ function displayList(list) {
     xLi.textContent = fullName;
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", displayModalInfo);
-    studentUL.appendChild(xLi);
+    if (!student.expelled) {
+      studentUL.appendChild(xLi);
+    }
   });
 }
 
@@ -317,6 +319,7 @@ function displayModalInfo(e) {
   copy.querySelector(".lastname").textContent = studentObj.lastName;
   copy.querySelector(".middlename").textContent = studentObj.middleName;
   copy.querySelector(".nickname").textContent = studentObj.nickName;
+
   //display blood type
   if (studentObj.bloodType) {
     copy.querySelector(`#${studentObj.bloodType}`).checked = true;
@@ -350,6 +353,18 @@ function displayModalInfo(e) {
   copy.querySelector(".quidditch").addEventListener("click", function () {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
     removeModal();
+    displayModalInfo(e);
+  });
+  //display expelled
+  if (studentObj.expelled) {
+    copy.querySelector(".iconswrapper").style.pointerEvents = "none";
+    copy.querySelector(".expelledStamp").classList.add("stamped");
+  }
+  //expelled
+  copy.querySelector(".expelled").addEventListener("click", function () {
+    studentObj.expelled = true;
+    removeModal();
+    displayList(arrayOfStudentObject);
     displayModalInfo(e);
   });
 
