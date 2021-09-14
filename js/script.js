@@ -18,6 +18,13 @@ const Student = {
   expelled: false,
 };
 
+const houseColors = {
+  gryffindor: { color1: "#660d10", color2: "#e19f27" },
+  hufflepuff: { color1: "#201e19", color2: "#f99e30" },
+  ravenclaw: { color1: "#193755", color2: "#8e5223" },
+  slytherin: { color1: "#31733a", color2: "#cccccb" },
+};
+
 let arrayOfStudentObject = [];
 let arrayOfExpelledStudents = [];
 let arrayLastNames = [];
@@ -284,7 +291,61 @@ function fullNameConstructor(student) {
 function displayModalInfo(e) {
   const studentID = e.target.dataset.id;
   const studentObj = arrayOfStudentObject.find((student) => student._id === studentID);
+  const house = studentObj.house.toLowerCase();
+  //setting the color of the house
+  document.documentElement.style.setProperty("--houseColor1", `${houseColors[house].color1}`);
+  document.documentElement.style.setProperty("--houseColor2", `${houseColors[house].color2}`);
+
+  //grab the template
+  const template = document.querySelector("#studentModalTemplate").content;
+
+  //clone it
+  const copy = template.cloneNode(true);
+
+  //change content
+  copy.querySelector("#studentmodal").addEventListener("click", removeModal);
+  copy.querySelector(".crest").style.backgroundImage = `url(../assets/${house}_crest_monoChrom.png)`;
+  copy.querySelector(".housename h1").innerHTML = `<span class="firstLetter">${studentObj.house[0]}</span>${studentObj.house.substring(1)}</h1>`;
+  if (studentObj.imgUrl) {
+    copy.querySelector(".studentpic").style.backgroundImage = `url(../assets/students/${studentObj.imgUrl})`;
+  }
+  copy.querySelector(".firstname").textContent = studentObj.firstName;
+  copy.querySelector(".lastname").textContent = studentObj.lastName;
+  copy.querySelector(".middlename").textContent = studentObj.middleName;
+  copy.querySelector(".nickname").textContent = studentObj.nickName;
+  if (studentObj.bloodType) {
+    copy.querySelector(`#${studentObj.bloodType}`).checked = true;
+  }
+  if (studentObj.inquisitor) {
+    copy.querySelector(".inquisitorial").style.filter = `saturate(1) opacity(1)`;
+  }
+  if (studentObj.prefect) {
+    copy.querySelector(".prefect").style.filter = `saturate(1) opacity(1)`;
+  }
+  if (studentObj.quidditchPlayer) {
+    copy.querySelector(".quidditch").style.filter = `saturate(1) opacity(1)`;
+  }
+
+  if (studentObj.house === "Slytherin" || studentObj.bloodType === "pure") {
+    copy.querySelector(".inquisitorial").style.backgroundImage = `url(../assets/inquisitorial_badge.png)`;
+    copy.querySelector(".inquisitorial").style.pointerEvents = "all";
+    copy.querySelector(".inquisitorial").addEventListener("click", function () {
+      studentObj.inquisitor = !studentObj.inquisitor;
+      removeModal();
+      displayModalInfo(e);
+    });
+  }
+  //grab parent
+  const parent = document.querySelector("main");
+  //append
+  parent.appendChild(copy);
+
   console.log(studentObj);
+}
+
+function removeModal() {
+  document.querySelector(".studentcardwrapper").remove();
+  document.querySelector("#studentmodal").remove();
 }
 
 function searchBar(e) {

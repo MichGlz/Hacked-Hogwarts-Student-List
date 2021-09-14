@@ -15,6 +15,9 @@
   --houseFirstLetter: "Germania One", cursive;
   --bodyFont: "Bubblegum Sans", cursive;
   --machineFont: "Special Elite", cursive;
+  --houseColor1: #660d10;
+  --houseColor2: #e19f27;
+  --cardColor: rgb(255, 255, 225);
 }
 
 body {
@@ -81,15 +84,27 @@ main {
 }
 
 /*-----------student list----------*/
+.list-container {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
 #student-list {
+  width: 40%;
   list-style: none;
 }
 
 #student-list li {
   cursor: pointer;
-  width: 40%;
+  width: 100%;
   padding: 0.2rem 0 0 2rem;
   font-size: 1.5rem;
+  transition: 0.3s;
+}
+
+#student-list li:hover {
+  transform: scale(1.1);
 }
 
 #student-list > li + li {
@@ -120,7 +135,7 @@ li.slytherin {
 
 /*------modal student card------*/
 
-.studentmodal {
+#studentmodal {
   height: 100vh;
   width: 100vw;
   background-color: rgba(82, 69, 82, 0.945);
@@ -131,11 +146,18 @@ li.slytherin {
   justify-content: center;
   align-items: center;
   color: black;
+  z-index: 6;
 }
 
 .studentcardwrapper {
-  width: 40%;
-  background-color: rgb(216, 216, 206);
+  width: 50vw;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  z-index: 7;
+  background-color: var(--cardColor);
 
   /* transition: 1.5s;
   transform: rotateX(90deg) scale(0.4); */
@@ -144,7 +166,7 @@ li.slytherin {
 .bar {
   width: 100%;
   height: 15px;
-  background-color: rgb(124, 43, 43);
+  background-color: var(--houseColor1);
   position: relative;
 }
 .tab {
@@ -153,7 +175,7 @@ li.slytherin {
   position: absolute;
   top: -35px;
   right: 0;
-  background-color: rgb(124, 43, 43);
+  background-color: var(--houseColor1);
   border-radius: 8px 8px 0 0;
 }
 
@@ -215,7 +237,8 @@ li.slytherin {
 }
 
 .inquisitorial {
-  background-image: url(../assets/inquisitorial_badge.png);
+  background-image: none;
+  pointer-events: none;
 }
 
 .quidditch {
@@ -224,6 +247,7 @@ li.slytherin {
 }
 
 :is(.inquisitorial, .quidditch, .prefect):hover {
+  transform: scale(1.08);
   filter: saturate(1) opacity(1);
 }
 
@@ -262,10 +286,10 @@ li.slytherin {
 .rect {
   width: 25%;
   height: 100%;
-  background-color: rgb(124, 43, 43);
+  background-color: var(--houseColor1);
 }
 .color2 {
-  background-color: rgb(216, 201, 118);
+  background-color: var(--houseColor2);
 }
 
 .data {
@@ -287,6 +311,11 @@ li.slytherin {
   align-items: center;
   gap: 1rem;
 }
+
+.bloodwrapper {
+  pointer-events: none;
+}
+
 .bloodwrapper input[type="radio"] {
   position: relative;
   width: 20px;
@@ -296,7 +325,7 @@ li.slytherin {
   content: "";
   width: 20px;
   height: 20px;
-  background-color: rgb(216, 216, 206);
+  background-color: var(--cardColor);
   position: absolute;
   top: 0;
   left: 0;
