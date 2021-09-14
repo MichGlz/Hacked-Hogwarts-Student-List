@@ -5,7 +5,7 @@ window.addEventListener("DOMContentLoaded", start);
 const Student = {
   _id: undefined,
   firstName: undefined,
-  lastName: undefined,
+  lastName: "",
   middleName: undefined,
   nickName: undefined,
   imgUrl: undefined,
@@ -157,7 +157,7 @@ function getLastName(fullName) {
     lastNameLowerCase = fullName.substring(fullName.lastIndexOf(" ") + 1);
     lastName = capitalizeString(lastNameLowerCase);
   } else {
-    lastName = undefined;
+    lastName = "";
   }
   // console.log(lastName);
   return lastName;
@@ -171,10 +171,10 @@ function getMiddleName(fullName) {
     middleNameLowerCase = fullName.substring(fullName.indexOf(" ") + 1, fullName.lastIndexOf(" "));
     middleName = capitalizeString(middleNameLowerCase);
     if (middleName.includes(`"`)) {
-      middleName = undefined;
+      middleName = "";
     }
   } else {
-    middleName = undefined;
+    middleName = "";
   }
   // console.log(middleName);
   return middleName;
@@ -188,7 +188,7 @@ function getNickName(fullName) {
     nickNameLowerCase = fullName.substring(fullName.indexOf('"') + 1, fullName.lastIndexOf('"'));
     nickName = capitalizeString(nickNameLowerCase);
   } else {
-    nickName = undefined;
+    nickName = "";
   }
   // console.log(nickName);
   return nickName;
@@ -368,9 +368,9 @@ function removeModal() {
 
 function searchBar(e) {
   console.log(e.target.value);
-  const regex = e.target.value;
-  let searchList = arrayOfStudentObject.filter((student) => student.firstName.match(regex));
-  console.log(searchList);
+  const regex = e.target.value.toLowerCase();
+  let searchList = arrayOfStudentObject.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
+  displayList(searchList);
 }
 ///////////////////////////posible search bar/////////////////////
 // const paragraph = 'The quick brown fox jumped over the lazy dog. It barked.';
