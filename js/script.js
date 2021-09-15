@@ -4,10 +4,10 @@ window.addEventListener("DOMContentLoaded", start);
 
 const Student = {
   _id: undefined,
-  firstName: undefined,
+  firstName: "",
   lastName: "",
-  middleName: undefined,
-  nickName: undefined,
+  middleName: "",
+  nickName: "",
   imgUrl: undefined,
   gender: undefined,
   house: undefined,
