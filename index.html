@@ -42,7 +42,7 @@
           </select>
         </label>
 
-        <button>expelled students</button>
+        <button id="theOtherList">expelled students</button>
       </div>
       <div class="searchwrapper">
         <label for="search-names">search</label>
@@ -72,6 +72,7 @@
         <img src="assets/hogwarts-crest.png" alt="hogwarts crest" />
       </div>
       <div class="list-container">
+        <h1 id="listTitle">Active Students</h1>
         <ul id="student-list"></ul>
       </div>
     </main>
@@ -80,48 +81,50 @@
       <!-- here start the modal -->
       <div id="studentmodal"></div>
       <div class="studentcardwrapper">
-        <div class="bar">
-          <div class="tab"></div>
-        </div>
-        <div class="studentcard">
-          <div class="infographies">
-            <div class="cresthouseiconswrapper">
-              <div class="crestnamewrapper">
-                <div class="crest"></div>
-                <div class="housename">
-                  <h1><span class="firstLetter">G</span>ryffindor</h1>
+        <div class="studentcardwrappersprit">
+          <div class="bar">
+            <div class="tab"></div>
+          </div>
+          <div class="studentcard">
+            <div class="infographies">
+              <div class="cresthouseiconswrapper">
+                <div class="crestnamewrapper">
+                  <div class="crest"></div>
+                  <div class="housename">
+                    <h1><span class="firstLetter">G</span>ryffindor</h1>
+                  </div>
+                </div>
+                <div class="iconswrapper">
+                  <div class="icon inquisitorial"></div>
+                  <div class="icon quidditch"></div>
+                  <div class="icon prefect"></div>
+                  <div class="icon expelled"></div>
                 </div>
               </div>
-              <div class="iconswrapper">
-                <div class="icon inquisitorial"></div>
-                <div class="icon quidditch"></div>
-                <div class="icon prefect"></div>
-                <div class="icon expelled"></div>
-              </div>
+              <div class="studentpic"></div>
             </div>
-            <div class="studentpic"></div>
-          </div>
-          <div class="bardoublecolor">
-            <div class="rect color1"></div>
-            <div class="rect color2"></div>
-            <div class="rect color1"></div>
-            <div class="rect color2"></div>
-          </div>
-          <section class="data">
-            <p>First Name:<span class="firstname">Miguel</span></p>
-            <p>Middle Name:<span class="middlename">German</span></p>
-            <p>Last Name:<span class="lastname">Gonzalez</span></p>
-            <p>Nick Name:<span class="nickname">Mich</span></p>
-            <div class="bloodType">
-              <p>Blood Type:</p>
-              <div class="bloodwrapper">
-                <label for="pure"><input type="radio" name="blood" id="pure" />pure</label>
-                <label for="half"><input type="radio" name="blood" id="half" />half</label>
-                <label for="muggle"><input type="radio" name="blood" id="muggle" />muggle</label>
-              </div>
+            <div class="bardoublecolor">
+              <div class="rect color1"></div>
+              <div class="rect color2"></div>
+              <div class="rect color1"></div>
+              <div class="rect color2"></div>
             </div>
-          </section>
-          <div class="expelledStamp"></div>
+            <section class="data">
+              <p>First Name:<span class="firstname">Miguel</span></p>
+              <p>Middle Name:<span class="middlename">German</span></p>
+              <p>Last Name:<span class="lastname">Gonzalez</span></p>
+              <p>Nick Name:<span class="nickname">Mich</span></p>
+              <div class="bloodType">
+                <p>Blood Type:</p>
+                <div class="bloodwrapper">
+                  <label for="pure"><input type="radio" name="blood" id="pure" />pure</label>
+                  <label for="half"><input type="radio" name="blood" id="half" />half</label>
+                  <label for="muggle"><input type="radio" name="blood" id="muggle" />muggle</label>
+                </div>
+              </div>
+            </section>
+            <div class="expelledStamp"></div>
+          </div>
         </div>
       </div>
 

@@ -18,6 +18,7 @@
   --houseColor1: #660d10;
   --houseColor2: #e19f27;
   --cardColor: rgb(255, 255, 225);
+  --h1font: "Fredericka the Great", cursive;
 }
 
 body {
@@ -87,7 +88,16 @@ main {
 .list-container {
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.list-container h1 {
+  font-family: var(--h1font);
+  font-weight: 100;
+  font-size: 2.5rem;
+  text-align: center;
 }
 
 #student-list {
@@ -154,27 +164,49 @@ li.slytherin {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform-origin: top;
   transform: translate(-50%, -50%);
   color: black;
   z-index: 7;
+}
+
+.studentcardwrappersprit {
   background-color: var(--cardColor);
-  /* opacity: 0; */
-  /* animation-name: apear;
-  animation-delay: 0.2s;
-  animation-duration: 0.5s;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards; */
-  /* transition: 1.5s;
+  /* transition: 0.8s;
   transform: rotateX(90deg) scale(0.4); */
+}
+
+.apear {
+  transform-origin: bottom;
+  animation-name: apear;
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  box-shadow: 0 0 50px black;
+}
+
+.disapear {
+  transform-origin: right;
+  animation-name: apear;
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in;
+  animation-direction: reverse;
+  box-shadow: 0 0 50px black;
 }
 
 @keyframes apear {
   0% {
-    opacity: 0;
+    transform: rotateX(90deg) rotateY(100deg) scale(0.8);
+    box-shadow: 0 0 0 black;
+  }
+
+  80% {
+    transform: rotateX(0) rotateY(0) scale(1.02);
+    box-shadow: 0 0 50px black;
   }
   100% {
-    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 10px black;
   }
 }
 
@@ -263,7 +295,6 @@ li.slytherin {
 
 :is(.inquisitorial, .quidditch, .prefect):hover {
   transform: scale(1.08);
-  filter: saturate(1) opacity(1);
 }
 
 .prefect {

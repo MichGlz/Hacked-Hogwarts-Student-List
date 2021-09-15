@@ -2,6 +2,7 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
+//object prototype
 const Student = {
   _id: undefined,
   firstName: "",
@@ -18,6 +19,7 @@ const Student = {
   expelled: false,
 };
 
+//the houses colors
 const houseColors = {
   gryffindor: { color1: "#660d10", color2: "#e19f27" },
   hufflepuff: { color1: "#201e19", color2: "#f99e30" },
@@ -25,10 +27,7 @@ const houseColors = {
   slytherin: { color1: "#31733a", color2: "#cccccb" },
 };
 
-let arrayOfStudentObject = [];
-let arrayOfExpelledStudents = [];
-let arrayLastNames = [];
-let familiesList;
+//sttings
 const settings = {
   filterBy1: "house",
   valueToFilter1: "all",
@@ -38,7 +37,13 @@ const settings = {
   valueToFilter3: "all",
   sortBy: "name",
   sortDir: "asc",
+  expelledList: false,
 };
+
+let arrayOfStudentObject = [];
+let arrayOfExpelledStudents = [];
+let arrayLastNames = [];
+let familiesList;
 
 function start() {
   init();
@@ -48,6 +53,7 @@ function start() {
   document.querySelector("#search-names").addEventListener("input", searchBar);
   document.querySelector("#sort-by").addEventListener("change", setSort);
   document.querySelector("#direction").addEventListener("click", setDirection);
+  document.querySelector("#theOtherList").addEventListener("click", displayTheOtherList);
 }
 
 function init() {
@@ -251,11 +257,18 @@ function createID(n) {
 ////////////////////////////////display/////////////////////////////
 
 function displayList(list) {
+  let condition;
+
   const studentUL = document.getElementById("student-list");
   //cleaning list
   studentUL.querySelectorAll("li").forEach((li) => li.remove());
   //displaying li
   list.forEach((student) => {
+    if (settings.expelledList) {
+      condition = student.expelled;
+    } else {
+      condition = !student.expelled;
+    }
     let xLi = document.createElement("LI");
     const fullName = fullNameConstructor(student);
     xLi.dataset.id = student._id;
@@ -271,7 +284,7 @@ function displayList(list) {
     }
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", displayModalInfo);
-    if (!student.expelled) {
+    if (condition) {
       studentUL.appendChild(xLi);
     }
   });
@@ -374,13 +387,31 @@ function displayModalInfo(e) {
   const parent = document.querySelector("main");
   //append
   parent.appendChild(copy);
-
-  console.log(studentObj);
 }
 
 function removeModal() {
-  document.querySelector(".studentcardwrapper").remove();
-  document.querySelector("#studentmodal").remove();
+  const card = document.querySelector(".studentcardwrappersprit");
+  card.addEventListener("animationend", () => {
+    document.querySelector(".studentcardwrapper").remove();
+    setTimeout(() => {
+      document.querySelector("#studentmodal").remove();
+    }, 300);
+  });
+  card.classList.add("disapear");
+}
+
+function displayTheOtherList() {
+  settings.expelledList = !settings.expelledList;
+  const button = document.querySelector("#theOtherList");
+  const listH1 = document.querySelector("#listTitle");
+  if (settings.expelledList) {
+    button.innerHTML = "Active Studentes";
+    listH1.textContent = "Expelled Studentes";
+  } else {
+    button.innerHTML = "Expelled Studentes";
+    listH1.textContent = "Active Studentes";
+  }
+  buildList();
 }
 
 ////////////////search bar////////////////////////////////////////////////
@@ -388,7 +419,8 @@ function removeModal() {
 function searchBar(e) {
   console.log(e.target.value);
   const regex = e.target.value.toLowerCase();
-  let searchList = arrayOfStudentObject.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
+  let newList = buildList();
+  let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
   displayList(searchList);
 }
 ////////////////////////filter & sort///////////////////////////////
@@ -402,8 +434,8 @@ function setFilter(e) {
   buildList();
 }
 
-function filterList(filteredList) {
-  let list1 = filteredList;
+function filterList(allStudentsList) {
+  let list1 = allStudentsList;
   let list2;
 
   //repeat the filtering for each value of the filters
@@ -428,8 +460,9 @@ function filterList(filteredList) {
     list1 = list2;
   }
 
+  const filteredList = list1;
   // console.log(filteredList);
-  return list2;
+  return filteredList;
 }
 
 function setSort(e) {
@@ -477,4 +510,5 @@ function buildList() {
   const sortedList = sortList(currentList);
 
   displayList(sortedList);
+  return sortedList;
 }
