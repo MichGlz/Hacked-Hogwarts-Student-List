@@ -48,6 +48,24 @@
         <label for="search-names">search</label>
         <input type="search" name="search-names" id="search-names" />
       </div>
+      <div class="sortWrapper">
+        <label for="sort-by" class="sort-label"
+          >Sort by
+          <select name="sort-by" id="sort-by" data-filter="sort">
+            <option>-----</option>
+            <option value="firstName">First name</option>
+            <option value="lastName">Last name</option>
+            <option value="house">House</option>
+            <option value="inquisitor">Inquisitors</option>
+            <option value="prefect">Prefects</option>
+            <option value="quidditchPlayer">Quidditch players</option>
+          </select>
+        </label>
+        <label for=""
+          >Direction:
+          <button id="direction" data-sort-direction="asc">&#8645;</button>
+        </label>
+      </div>
     </header>
     <main>
       <div class="logo">

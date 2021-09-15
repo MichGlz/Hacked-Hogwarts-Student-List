@@ -29,35 +29,21 @@ let arrayOfStudentObject = [];
 let arrayOfExpelledStudents = [];
 let arrayLastNames = [];
 let familiesList;
+const settings = {
+  filterBy: "none",
+  valueToFilter: "all",
+  sortBy: "name",
+  sortDir: "asc",
+};
 
 function start() {
   init();
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
-    select.addEventListener("change", filterList);
+    select.addEventListener("change", setFilter);
   });
   document.querySelector("#search-names").addEventListener("input", searchBar);
-}
-
-function filterList(e) {
-  let filteredList;
-  let valueF = e.target.value;
-  const filterBy = e.target.dataset.filter;
-  if (filterBy !== "responsibility") {
-    // console.log(filterBy);
-    if (filterBy === "house") {
-      valueF = capitalizeString(valueF);
-    }
-    // console.log(valueF);
-    filteredList = arrayOfStudentObject.filter((student) => student[filterBy] === valueF);
-  } else {
-    filteredList = arrayOfStudentObject.filter((student) => student[valueF]);
-  }
-
-  if (valueF === "all") {
-    filteredList = arrayOfStudentObject;
-  }
-  // console.log(filteredList);
-  displayList(filteredList);
+  document.querySelector("#sort-by").addEventListener("change", setSort);
+  document.querySelector("#direction").addEventListener("click", setDirection);
 }
 
 function init() {
@@ -131,7 +117,8 @@ function capitalizeString(word) {
   wordWithUpperCase = word.replace(word[0], word[0].toUpperCase());
   if (wordWithUpperCase.includes("-")) {
     word2 = word.split("-")[1];
-    let secondWordWithUpperCase = word2.replace(word2[0], word2[0].toUpperCase());
+    let secondWordWithUpperCase = capitalizeString(word2);
+    // let secondWordWithUpperCase = word2.replace(word2[0], word2[0].toUpperCase());
     wordWithUpperCase = `${wordWithUpperCase.split("-")[0]}-${secondWordWithUpperCase}`;
   }
   // console.log(wordWithUpperCase);
@@ -269,6 +256,15 @@ function displayList(list) {
     const fullName = fullNameConstructor(student);
     xLi.dataset.id = student._id;
     xLi.textContent = fullName;
+    if (student.inquisitor) {
+      xLi.innerHTML += "&#128995;";
+    }
+    if (student.quidditchPlayer) {
+      xLi.innerHTML += "&#128993;";
+    }
+    if (student.prefect) {
+      xLi.innerHTML += "&#128308;";
+    }
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", displayModalInfo);
     if (!student.expelled) {
@@ -335,6 +331,7 @@ function displayModalInfo(e) {
     copy.querySelector(".inquisitorial").style.pointerEvents = "all";
     copy.querySelector(".inquisitorial").addEventListener("click", function () {
       studentObj.inquisitor = !studentObj.inquisitor;
+      buildList();
       removeModal();
       displayModalInfo(e);
     });
@@ -352,6 +349,7 @@ function displayModalInfo(e) {
   //select a quidditch player
   copy.querySelector(".quidditch").addEventListener("click", function () {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
+    buildList();
     removeModal();
     displayModalInfo(e);
   });
@@ -363,8 +361,8 @@ function displayModalInfo(e) {
   //expelled
   copy.querySelector(".expelled").addEventListener("click", function () {
     studentObj.expelled = true;
+    buildList();
     removeModal();
-    displayList(arrayOfStudentObject);
     displayModalInfo(e);
   });
 
@@ -381,24 +379,90 @@ function removeModal() {
   document.querySelector("#studentmodal").remove();
 }
 
+////////////////search bar////////////////////////////////////////////////
+
 function searchBar(e) {
   console.log(e.target.value);
   const regex = e.target.value.toLowerCase();
   let searchList = arrayOfStudentObject.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
   displayList(searchList);
 }
-///////////////////////////posible search bar/////////////////////
-// const paragraph = 'The quick brown fox jumped over the lazy dog. It barked.';
-// const regex = "ed";
-// const found = [];
-// const words=paragraph.split(" ");
-// words.forEach(word=>{
-// if(word.match(regex)){
-//   found.push(word);
-// }
-// });
-// console.log(found);
+////////////////////////filter & sort///////////////////////////////
+function setFilter(e) {
+  settings.valueToFilter = e.target.value;
+  settings.filterBy = e.target.dataset.filter;
+  document.querySelectorAll(".filtersWrapper select").forEach((select) => {
+    select.value = "all";
+  });
+  e.target.value = settings.valueToFilter;
 
-// console.log(found);
-// expected output: Array ["T", "I"]
-///////////////////////////////////////////////////////////////////////
+  buildList();
+}
+
+function filterList(filteredList) {
+  let valueToFilter = settings.valueToFilter;
+  const filterBy = settings.filterBy;
+  if (filterBy !== "responsibility") {
+    // console.log(filterBy);
+    if (filterBy === "house") {
+      valueToFilter = capitalizeString(valueToFilter);
+    }
+    // console.log(valueF);
+    filteredList = arrayOfStudentObject.filter((student) => student[filterBy] === valueToFilter);
+  } else {
+    filteredList = arrayOfStudentObject.filter((student) => student[valueToFilter]);
+  }
+
+  if (valueToFilter.toLowerCase() === "all") {
+    filteredList = arrayOfStudentObject;
+  }
+  // console.log(filteredList);
+  return filteredList;
+}
+
+function setSort(e) {
+  settings.sortBy = e.target.value;
+  buildList();
+}
+
+function sortList(currentList) {
+  let direction = 1;
+  const sortBy = settings.sortBy;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  }
+
+  const sortedList = currentList.sort(sortByProperty);
+
+  function sortByProperty(animalA, animalB) {
+    if (animalA[sortBy] < animalB[sortBy]) {
+      return -1 * direction;
+    } else {
+      return 1 * direction;
+    }
+  }
+
+  // return sortedList;
+  return sortedList;
+}
+
+function setDirection(e) {
+  settings.sortDir = e.target.dataset.sortDirection;
+  //toggle direction
+
+  if (settings.sortDir === "asc") {
+    e.target.dataset.sortDirection = "desc";
+    e.target.innerHTML = "&#11015;";
+  } else {
+    e.target.dataset.sortDirection = "asc";
+    e.target.innerHTML = "&#11014;";
+  }
+  buildList();
+}
+
+function buildList() {
+  const currentList = filterList(arrayOfStudentObject);
+  const sortedList = sortList(currentList);
+
+  displayList(sortedList);
+}
