@@ -30,8 +30,12 @@ let arrayOfExpelledStudents = [];
 let arrayLastNames = [];
 let familiesList;
 const settings = {
-  filterBy: "none",
-  valueToFilter: "all",
+  filterBy1: "house",
+  valueToFilter1: "all",
+  filterBy2: "bloodType",
+  valueToFilter2: "all",
+  filterBy3: "responsibility",
+  valueToFilter3: "all",
   sortBy: "name",
   sortDir: "asc",
 };
@@ -257,13 +261,13 @@ function displayList(list) {
     xLi.dataset.id = student._id;
     xLi.textContent = fullName;
     if (student.inquisitor) {
-      xLi.innerHTML += "&#128995;";
+      xLi.innerHTML += " &#9772;";
     }
     if (student.quidditchPlayer) {
-      xLi.innerHTML += "&#128993;";
+      xLi.innerHTML += " &#9854;";
     }
     if (student.prefect) {
-      xLi.innerHTML += "&#128308;";
+      xLi.innerHTML += " &#128737;";
     }
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", displayModalInfo);
@@ -389,35 +393,43 @@ function searchBar(e) {
 }
 ////////////////////////filter & sort///////////////////////////////
 function setFilter(e) {
-  settings.valueToFilter = e.target.value;
-  settings.filterBy = e.target.dataset.filter;
+  let i = 1;
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
-    select.value = "all";
+    settings[`valueToFilter${i}`] = select.value;
+    settings[`filterBy${i}`] = select.dataset.filter;
+    i++;
   });
-  e.target.value = settings.valueToFilter;
-
   buildList();
 }
 
 function filterList(filteredList) {
-  let valueToFilter = settings.valueToFilter;
-  const filterBy = settings.filterBy;
-  if (filterBy !== "responsibility") {
-    // console.log(filterBy);
-    if (filterBy === "house") {
-      valueToFilter = capitalizeString(valueToFilter);
+  let list1 = filteredList;
+  let list2;
+
+  //repeat the filtering for each value of the filters
+  for (let i = 1; i <= 3; i++) {
+    let valueToFilter = settings[`valueToFilter${i}`];
+    const filterBy = settings[`filterBy${i}`];
+    if (filterBy !== "responsibility") {
+      // console.log(filterBy);
+      if (filterBy === "house") {
+        valueToFilter = capitalizeString(valueToFilter);
+      }
+      // console.log(valueF);
+      list2 = list1.filter((student) => student[filterBy] === valueToFilter);
+    } else {
+      list2 = list1.filter((student) => student[valueToFilter]);
     }
-    // console.log(valueF);
-    filteredList = arrayOfStudentObject.filter((student) => student[filterBy] === valueToFilter);
-  } else {
-    filteredList = arrayOfStudentObject.filter((student) => student[valueToFilter]);
+
+    if (valueToFilter.toLowerCase() === "all") {
+      list2 = list1;
+    }
+
+    list1 = list2;
   }
 
-  if (valueToFilter.toLowerCase() === "all") {
-    filteredList = arrayOfStudentObject;
-  }
   // console.log(filteredList);
-  return filteredList;
+  return list2;
 }
 
 function setSort(e) {
