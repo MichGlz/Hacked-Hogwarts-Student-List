@@ -37,7 +37,8 @@ const settings = {
   valueToFilter3: "all",
   sortBy: "name",
   sortDir: "asc",
-  expelledList: false,
+  isExpelledList: false,
+  isModalInfo: false,
 };
 
 let arrayOfStudentObject = [];
@@ -257,33 +258,48 @@ function createID(n) {
 ////////////////////////////////display/////////////////////////////
 
 function displayList(list) {
+  //declare condition for flag
   let condition;
 
+  //grab parent
   const studentUL = document.getElementById("student-list");
+
   //cleaning list
   studentUL.querySelectorAll("li").forEach((li) => li.remove());
+
   //displaying li
   list.forEach((student) => {
-    if (settings.expelledList) {
+    //flag expelled students list
+    if (settings.isExpelledList) {
       condition = student.expelled;
     } else {
       condition = !student.expelled;
     }
+
+    //create li
     let xLi = document.createElement("LI");
+    //reconstruct full name string
     const fullName = fullNameConstructor(student);
+
+    //add info in the li element
     xLi.dataset.id = student._id;
     xLi.textContent = fullName;
+
     if (student.inquisitor) {
       xLi.innerHTML += " &#9772;";
     }
+
     if (student.quidditchPlayer) {
       xLi.innerHTML += " &#9854;";
     }
+
     if (student.prefect) {
       xLi.innerHTML += " &#128737;";
     }
+
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", displayModalInfo);
+
     if (condition) {
       studentUL.appendChild(xLi);
     }
@@ -309,9 +325,11 @@ function fullNameConstructor(student) {
 
 function displayModalInfo(e) {
   const studentID = e.target.dataset.id;
+  //
   const studentObj = arrayOfStudentObject.find((student) => student._id === studentID);
-  const house = studentObj.house.toLowerCase();
+
   //setting the color of the house
+  const house = studentObj.house.toLowerCase();
   document.documentElement.style.setProperty("--houseColor1", `${houseColors[house].color1}`);
   document.documentElement.style.setProperty("--houseColor2", `${houseColors[house].color2}`);
 
@@ -320,6 +338,12 @@ function displayModalInfo(e) {
 
   //clone it
   const copy = template.cloneNode(true);
+
+  //add animation
+  if (!settings.isModalInfo) {
+    copy.querySelector(".studentcardwrappersprit").classList.add("apear");
+    copy.querySelector(".studentcardwrappersprit").addEventListener("animationend", removeApear);
+  }
 
   //change content
   copy.querySelector("#studentmodal").addEventListener("click", removeModal);
@@ -349,7 +373,7 @@ function displayModalInfo(e) {
     copy.querySelector(".inquisitorial").addEventListener("click", function () {
       studentObj.inquisitor = !studentObj.inquisitor;
       buildList();
-      removeModal();
+      refreshModal();
       displayModalInfo(e);
     });
   }
@@ -367,26 +391,36 @@ function displayModalInfo(e) {
   copy.querySelector(".quidditch").addEventListener("click", function () {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
     buildList();
-    removeModal();
+    refreshModal();
     displayModalInfo(e);
   });
   //display expelled
   if (studentObj.expelled) {
     copy.querySelector(".iconswrapper").style.pointerEvents = "none";
+    copy.querySelector(".inquisitorial").style.pointerEvents = "none";
     copy.querySelector(".expelledStamp").classList.add("stamped");
   }
   //expelled
   copy.querySelector(".expelled").addEventListener("click", function () {
     studentObj.expelled = true;
+    studentObj.inquisitor = false;
+    studentObj.prefect = false;
+    studentObj.quidditchPlayer = false;
     buildList();
-    removeModal();
+    refreshModal();
     displayModalInfo(e);
+    setTimeout(removeModal, 800);
   });
 
   //grab parent
   const parent = document.querySelector("main");
   //append
   parent.appendChild(copy);
+}
+
+function refreshModal() {
+  document.querySelector(".studentcardwrapper").remove();
+  document.querySelector("#studentmodal").remove();
 }
 
 function removeModal() {
@@ -398,13 +432,20 @@ function removeModal() {
     }, 300);
   });
   card.classList.add("disapear");
+  settings.isModalInfo = false;
+}
+
+function removeApear(e) {
+  e.target.removeEventListener("animationend", removeApear);
+  e.target.classList.remove("apear");
+  settings.isModalInfo = true;
 }
 
 function displayTheOtherList() {
-  settings.expelledList = !settings.expelledList;
+  settings.isExpelledList = !settings.isExpelledList;
   const button = document.querySelector("#theOtherList");
   const listH1 = document.querySelector("#listTitle");
-  if (settings.expelledList) {
+  if (settings.isExpelledList) {
     button.innerHTML = "Active Studentes";
     listH1.textContent = "Expelled Studentes";
   } else {
