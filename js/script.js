@@ -193,13 +193,30 @@ function getNickName(fullName) {
 }
 
 //--------------------------------
+function fullNameConstructor(student) {
+  let studentFullName;
+  if (student.lastName) {
+    studentFullName = `${student.firstName} ${student.lastName}`;
+  } else {
+    studentFullName = student.firstName;
+  }
+
+  if (student.middleName) {
+    studentFullName = `${student.firstName} ${student.middleName} ${student.lastName}`;
+  }
+  if (student.nickName) {
+    studentFullName = `${student.firstName} "${student.nickName}" ${student.lastName}`;
+  }
+  return studentFullName;
+}
+
+//--------------------------------
 function getHouse(houseClean) {
   const house = capitalizeString(houseClean);
   return house;
 }
 
 //---------------------------------
-
 function getImgUrl() {
   arrayOfStudentObject.forEach((e) => {
     let firstPart;
@@ -306,23 +323,6 @@ function displayList(list) {
   });
 }
 
-function fullNameConstructor(student) {
-  let studentFullName;
-  if (student.lastName) {
-    studentFullName = `${student.firstName} ${student.lastName}`;
-  } else {
-    studentFullName = student.firstName;
-  }
-
-  if (student.middleName) {
-    studentFullName = `${student.firstName} ${student.middleName} ${student.lastName}`;
-  }
-  if (student.nickName) {
-    studentFullName = `${student.firstName} "${student.nickName}" ${student.lastName}`;
-  }
-  return studentFullName;
-}
-
 function displayModalInfo(e) {
   const studentID = e.target.dataset.id;
   //
@@ -366,6 +366,7 @@ function displayModalInfo(e) {
   if (studentObj.inquisitor) {
     copy.querySelector(".inquisitorial").style.filter = `saturate(1) opacity(1)`;
   }
+
   //inquisitorial electables
   if (studentObj.house === "Slytherin" || studentObj.bloodType === "pure") {
     copy.querySelector(".inquisitorial").style.backgroundImage = `url(../assets/inquisitorial_badge.png)`;
@@ -387,6 +388,7 @@ function displayModalInfo(e) {
   if (studentObj.quidditchPlayer) {
     copy.querySelector(".quidditch").style.filter = `saturate(1) opacity(1)`;
   }
+
   //select a quidditch player
   copy.querySelector(".quidditch").addEventListener("click", function () {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
@@ -394,6 +396,7 @@ function displayModalInfo(e) {
     refreshModal();
     displayModalInfo(e);
   });
+
   //display expelled
   if (studentObj.expelled) {
     copy.querySelector(".iconswrapper").style.pointerEvents = "none";
