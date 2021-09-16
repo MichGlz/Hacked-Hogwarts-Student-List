@@ -43,10 +43,10 @@ const settings = {
 
 let arrayOfStudentObject = [];
 let arrayOfExpelledStudents = [];
-let familiesList;
+let listsOfFamilies;
 
 function start() {
-  init();
+  fetchLists();
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
@@ -57,7 +57,7 @@ function start() {
   document.querySelector("#theOtherList").addEventListener("click", displayTheOtherList);
 }
 
-function init() {
+function fetchLists() {
   let urlStudents = "https://petlatkea.dk/2021/hogwarts/students.json";
   let urlFamilyArrays = "https://petlatkea.dk/2021/hogwarts/families.json";
 
@@ -67,7 +67,7 @@ function init() {
       return res.json();
     })
     .then(function (data) {
-      familiesList = data;
+      listsOfFamilies = data;
     });
 
   //list of student obj
@@ -254,10 +254,10 @@ function bloodStatus(lastName) {
   let bloodType;
   if (lastName) {
     bloodType = "muggle";
-    if (familiesList.pure.includes(lastName)) {
+    if (listsOfFamilies.pure.includes(lastName)) {
       bloodType = "pure";
     }
-    if (familiesList.half.includes(lastName)) {
+    if (listsOfFamilies.half.includes(lastName)) {
       bloodType = "half";
     }
   } else {
@@ -318,7 +318,7 @@ function displayList(list) {
     }
 
     xLi.classList.add(`${student.house.toLowerCase()}`);
-    xLi.addEventListener("click", displayModalInfo);
+    xLi.addEventListener("click", getStudentId);
 
     if (condition) {
       studentUL.appendChild(xLi);
@@ -326,8 +326,12 @@ function displayList(list) {
   });
 }
 
-function displayModalInfo(e) {
+function getStudentId(e) {
   const studentID = e.target.dataset.id;
+  displayModalInfo(studentID);
+}
+
+function displayModalInfo(studentID) {
   //
   const studentObj = arrayOfStudentObject.find((student) => student._id === studentID);
 
@@ -348,13 +352,19 @@ function displayModalInfo(e) {
     copy.querySelector(".studentcardwrappersprit").addEventListener("animationend", removeApear);
   }
 
-  //change content
+  ////////////change content/////////////////
   copy.querySelector("#studentmodal").addEventListener("click", removeModal);
+
+  //styling the card
   copy.querySelector(".crest").style.backgroundImage = `url(../assets/${house}_crest_monoChrom.png)`;
   copy.querySelector(".housename h1").innerHTML = `<span class="firstLetter">${studentObj.house[0]}</span>${studentObj.house.substring(1)}</h1>`;
+
+  //changing picture
   if (studentObj.imgUrl) {
     copy.querySelector(".studentpic").style.backgroundImage = `url(../assets/students/${studentObj.imgUrl})`;
   }
+
+  //general info
   copy.querySelector(".firstname").textContent = studentObj.firstName;
   copy.querySelector(".lastname").textContent = studentObj.lastName;
   copy.querySelector(".middlename").textContent = studentObj.middleName;
@@ -370,7 +380,7 @@ function displayModalInfo(e) {
     copy.querySelector(".inquisitorial").style.filter = `saturate(1) opacity(1)`;
   }
 
-  //inquisitorial electables
+  //inquisitorial filter
   if (studentObj.house === "Slytherin" || studentObj.bloodType === "pure") {
     copy.querySelector(".inquisitorial").style.backgroundImage = `url(../assets/inquisitorial_badge.png)`;
     copy.querySelector(".inquisitorial").style.pointerEvents = "all";
@@ -378,7 +388,7 @@ function displayModalInfo(e) {
       studentObj.inquisitor = !studentObj.inquisitor;
       buildList();
       refreshModal();
-      displayModalInfo(e);
+      displayModalInfo(studentID);
     });
   }
 
@@ -388,12 +398,19 @@ function displayModalInfo(e) {
   }
 
   //select a prefect
-  copy.querySelector(".prefect").addEventListener("click", function () {
-    studentObj.prefect = !studentObj.prefect;
+  copy.querySelector(".prefect").addEventListener("click", clickPrefect);
+
+  function clickPrefect() {
+    if (studentObj.prefect === true) {
+      studentObj.prefect = false;
+    } else {
+      tryToMakeAPrefect(studentObj);
+    }
+
     buildList();
     refreshModal();
-    displayModalInfo(e);
-  });
+    displayModalInfo(studentID);
+  }
 
   //diplay quidditch logo
   if (studentObj.quidditchPlayer) {
@@ -405,7 +422,7 @@ function displayModalInfo(e) {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
     buildList();
     refreshModal();
-    displayModalInfo(e);
+    displayModalInfo(studentID);
   });
 
   //display expelled
@@ -422,10 +439,64 @@ function displayModalInfo(e) {
     studentObj.quidditchPlayer = false;
     buildList();
     refreshModal();
-    displayModalInfo(e);
-    setTimeout(removeModal, 800);
+    displayModalInfo(studentID);
+    setTimeout(removeModal, 600);
   });
 
+  //grab parent
+  const parent = document.querySelector("main");
+  //append
+  parent.appendChild(copy);
+}
+
+function tryToMakeAPrefect(studentSelected) {
+  const studentsInHouse = arrayOfStudentObject.filter((student) => student.house === studentSelected.house);
+  const prefectsInHouse = studentsInHouse.filter((student) => student.prefect);
+  const numberOfprefects = prefectsInHouse.length;
+
+  if (numberOfprefects < 2) {
+    studentSelected.prefect = true;
+  } else {
+    const studentA = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[0]._id);
+    const studentB = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[1]._id);
+    displayWarningPrefects(studentSelected, studentA, studentB);
+  }
+}
+
+function displayWarningPrefects(studentSelected, studentA, studentB) {
+  //grab the template
+  const template = document.querySelector("#warningprefects").content;
+
+  //clone it
+  const copy = template.cloneNode(true);
+
+  //change content
+  copy.querySelector(".alert").addEventListener("click", () => {
+    document.querySelector(".alert").remove();
+    document.querySelector(".smsboxwrapper").remove();
+  });
+  copy.querySelector("#studentA img").src = `/assets/students/${studentA.imgUrl}`;
+  copy.querySelector("#studentA h2").textContent = fullNameConstructor(studentA);
+  copy.querySelector("#btn-studentA").addEventListener("click", () => {
+    studentA.prefect = false;
+    studentSelected.prefect = true;
+    buildList();
+    refreshModal();
+    displayModalInfo(studentSelected._id);
+    document.querySelector(".alert").remove();
+    document.querySelector(".smsboxwrapper").remove();
+  });
+  copy.querySelector("#studentB img").src = `/assets/students/${studentB.imgUrl}`;
+  copy.querySelector("#studentB h2").textContent = fullNameConstructor(studentB);
+  copy.querySelector("#btn-studentB").addEventListener("click", () => {
+    studentB.prefect = false;
+    studentSelected.prefect = true;
+    buildList();
+    refreshModal();
+    displayModalInfo(studentSelected._id);
+    document.querySelector(".alert").remove();
+    document.querySelector(".smsboxwrapper").remove();
+  });
   //grab parent
   const parent = document.querySelector("main");
   //append

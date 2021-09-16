@@ -46,6 +46,24 @@ header {
   background-color: rgb(58, 56, 55);
 }
 
+button {
+  padding: 0.2rem 1rem;
+  color: #201e19;
+  background-color: burlywood;
+  border-radius: 10px;
+  font-family: var(--h1font);
+  font-size: 1.1rem;
+  box-shadow: none;
+  border: solid 1px #201e19;
+  cursor: pointer;
+}
+
+button:hover {
+  color: burlywood;
+  background-color: #201e19;
+  border: solid 1px burlywood;
+}
+
 .filtersWrapper {
   display: flex;
   justify-content: space-around;
@@ -70,10 +88,6 @@ header {
   flex-direction: column;
   width: 20%;
   font-size: 1.5rem;
-}
-
-#theOtherList {
-  width: 200px;
 }
 
 main {
@@ -408,3 +422,59 @@ li.slytherin {
 }
 
 /*------modal student card ends------------*/
+
+/*-------modal warning--------*/
+.alert.modal {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.699);
+}
+
+.smsboxwrapper {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.smsbox {
+  background-color: var(--cardColor);
+  padding: 2rem;
+  color: #201e19;
+  border-radius: 20px;
+  pointer-events: all;
+}
+
+.smsbox h1 {
+  margin: 0;
+  font-weight: 200;
+  font-family: var(--h1font);
+  text-align: center;
+}
+
+.smsbox p {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.smsbox .info {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.smsbox img {
+  width: 80px;
+}
