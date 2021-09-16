@@ -43,7 +43,6 @@ const settings = {
 
 let arrayOfStudentObject = [];
 let arrayOfExpelledStudents = [];
-let arrayLastNames = [];
 let familiesList;
 
 function start() {
@@ -51,6 +50,7 @@ function start() {
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
+  document.querySelector("#resetFilters").addEventListener("click", resetFilters);
   document.querySelector("#search-names").addEventListener("input", searchBar);
   document.querySelector("#sort-by").addEventListener("change", setSort);
   document.querySelector("#direction").addEventListener("click", setDirection);
@@ -93,22 +93,16 @@ function convertJSONData(studentsData) {
     student._id = createID(n);
     student.firstName = getFirstName(fullNameClean);
     student.lastName = getLastName(fullNameClean);
-    arrayLastNames.push(student.lastName);
     student.middleName = getMiddleName(fullNameClean);
     student.nickName = getNickName(fullNameClean);
     student.house = getHouse(houseClean);
     student.bloodType = bloodStatus(student.lastName);
-    ///blood status
-
-    // student.imgUrl = getImgUrl(fullNameClean);
+    student.imgUrl = getImgUrl(student.lastName, student.firstName);
 
     //--- push the object in the array of students
     arrayOfStudentObject.push(student);
   });
 
-  //-----------get the url of images
-  getImgUrl();
-  //-----------
   console.table(arrayOfStudentObject);
   displayList(arrayOfStudentObject);
 }
@@ -217,36 +211,45 @@ function getHouse(houseClean) {
 }
 
 //---------------------------------
-function getImgUrl() {
-  arrayOfStudentObject.forEach((e) => {
-    let firstPart;
-    let secondPart;
-
-    //------if has last name start
-    if (e.lastName) {
-      //--------- check if last name has " - "----
-      if (e.lastName.includes("-")) {
-        firstPart = e.lastName.split("-")[1];
-      } else {
-        firstPart = e.lastName;
-      }
-      //-----------check if last name is duplicate-------------
-      if (arrayLastNames.indexOf(e.lastName) === arrayLastNames.lastIndexOf(e.lastName)) {
-        secondPart = e.firstName[0];
-      } else {
-        secondPart = e.firstName;
-      }
-      //------------get values and lower case
-      const urlUpperCase = `${firstPart}_${secondPart}.png`;
-      const urlLowCase = urlUpperCase.toLowerCase();
-      e.imgUrl = urlLowCase;
+function getImgUrl(lastName, firstName) {
+  let firstPart;
+  let secondPart;
+  let imgUrl;
+  const prevStudent = arrayOfStudentObject.find((student) => student.lastName === lastName);
+  //------if has last name start
+  if (lastName) {
+    //--------- check if last name has " - "----
+    if (lastName.includes("-")) {
+      firstPart = lastName.split("-")[1];
     } else {
-      e.imgUrl = undefined;
+      firstPart = lastName;
     }
-    // console.log(e.imgUrl);
-  });
+
+    //-----------check if last name is duplicate-------------
+    if (prevStudent) {
+      prevStudent.imgUrl = changeImgUrl(prevStudent.imgUrl, prevStudent.firstName);
+      secondPart = firstName;
+    } else {
+      secondPart = firstName[0];
+    }
+    //------------get values and lower case
+    const urlUpperCase = `${firstPart}_${secondPart}.png`;
+    const urlLowCase = urlUpperCase.toLowerCase();
+    imgUrl = urlLowCase;
+  } else {
+    imgUrl = undefined;
+  }
+  // console.log(e.imgUrl);
+  return imgUrl;
 }
 
+function changeImgUrl(imgUrl, firstName) {
+  firstName = firstName.toLowerCase();
+  imgUrl = `${imgUrl.split("_")[0]}_${firstName}.png`;
+  return imgUrl;
+}
+
+//-----------------------------------
 function bloodStatus(lastName) {
   let bloodType;
   if (lastName) {
@@ -379,10 +382,18 @@ function displayModalInfo(e) {
     });
   }
 
-  //display prefect shild
+  //display prefect shield
   if (studentObj.prefect) {
     copy.querySelector(".prefect").style.filter = `saturate(1) opacity(1)`;
   }
+
+  //select a prefect
+  copy.querySelector(".prefect").addEventListener("click", function () {
+    studentObj.prefect = !studentObj.prefect;
+    buildList();
+    refreshModal();
+    displayModalInfo(e);
+  });
 
   //diplay quidditch logo
   if (studentObj.quidditchPlayer) {
@@ -421,6 +432,21 @@ function displayModalInfo(e) {
   parent.appendChild(copy);
 }
 
+function displayTheOtherList() {
+  settings.isExpelledList = !settings.isExpelledList;
+  const button = document.querySelector("#theOtherList");
+  const listH1 = document.querySelector("#listTitle");
+  if (settings.isExpelledList) {
+    button.innerHTML = "Active Studentes";
+    listH1.textContent = "Expelled Studentes";
+  } else {
+    button.innerHTML = "Expelled Studentes";
+    listH1.textContent = "Active Studentes";
+  }
+  resetFilters();
+  buildList();
+}
+
 function refreshModal() {
   document.querySelector(".studentcardwrapper").remove();
   document.querySelector("#studentmodal").remove();
@@ -444,22 +470,7 @@ function removeApear(e) {
   settings.isModalInfo = true;
 }
 
-function displayTheOtherList() {
-  settings.isExpelledList = !settings.isExpelledList;
-  const button = document.querySelector("#theOtherList");
-  const listH1 = document.querySelector("#listTitle");
-  if (settings.isExpelledList) {
-    button.innerHTML = "Active Studentes";
-    listH1.textContent = "Expelled Studentes";
-  } else {
-    button.innerHTML = "Expelled Studentes";
-    listH1.textContent = "Active Studentes";
-  }
-  buildList();
-}
-
 ////////////////search bar////////////////////////////////////////////////
-
 function searchBar(e) {
   console.log(e.target.value);
   const regex = e.target.value.toLowerCase();
@@ -467,13 +478,12 @@ function searchBar(e) {
   let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
   displayList(searchList);
 }
+
 ////////////////////////filter & sort///////////////////////////////
-function setFilter(e) {
-  let i = 1;
-  document.querySelectorAll(".filtersWrapper select").forEach((select) => {
-    settings[`valueToFilter${i}`] = select.value;
-    settings[`filterBy${i}`] = select.dataset.filter;
-    i++;
+function setFilter() {
+  document.querySelectorAll(".filtersWrapper select").forEach((select, i) => {
+    settings[`valueToFilter${i + 1}`] = select.value;
+    settings[`filterBy${i + 1}`] = select.dataset.filter;
   });
   buildList();
 }
@@ -507,6 +517,14 @@ function filterList(allStudentsList) {
   const filteredList = list1;
   // console.log(filteredList);
   return filteredList;
+}
+
+function resetFilters() {
+  const filters = document.querySelectorAll(".filtersWrapper select");
+  filters.forEach((select) => {
+    select.value = "all";
+  });
+  setFilter();
 }
 
 function setSort(e) {
