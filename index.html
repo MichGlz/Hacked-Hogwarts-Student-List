@@ -15,10 +15,10 @@
           >House
           <select name="filter-by-house" id="filter-by-house" data-filter="house">
             <option value="all" class="option1">All</option>
-            <option value="gryffindor" class="option2">gryffindor</option>
-            <option value="hufflepuff" class="option3">hufflepuff</option>
-            <option value="ravenclaw" class="option4">ravenclaw</option>
-            <option value="slytherin" class="option5">slytherin</option>
+            <option value="gryffindor" class="option2">Gryffindor</option>
+            <option value="hufflepuff" class="option3">Hufflepuff</option>
+            <option value="ravenclaw" class="option4">Ravenclaw</option>
+            <option value="slytherin" class="option5">Slytherin</option>
           </select>
         </label>
 
@@ -44,7 +44,7 @@
         <button id="resetFilters">Reset filters</button>
       </div>
       <div class="searchwrapper">
-        <label for="search-names">search</label>
+        <label for="search-names">Search</label>
         <input type="search" name="search-names" id="search-names" />
         <button id="theOtherList">Expelled students</button>
       </div>
@@ -76,6 +76,73 @@
         <ul id="student-list"></ul>
       </div>
     </main>
+    <aside>
+      <table>
+        <h2>Quantities</h2>
+        <tr>
+          <th>&#129497;</th>
+          <th>No. students</th>
+        </tr>
+        <tr>
+          <td>Gryffindor</td>
+          <td id="no-gryffindor"></td>
+        </tr>
+        <tr>
+          <td>Hufflepuff</td>
+          <td id="no-hufflepuff"></td>
+        </tr>
+        <tr>
+          <td>Ravenclaw</td>
+          <td id="no-ravenclaw"></td>
+        </tr>
+        <tr>
+          <td>Slytherin</td>
+          <td id="no-slytherin"></td>
+        </tr>
+        <tr>
+          <td>Active</td>
+          <td id="no-active"></td>
+        </tr>
+        <tr>
+          <td>Expelled</td>
+          <td id="no-expelled"></td>
+        </tr>
+        <tr>
+          <td>Displayed</td>
+          <td id="no-displayed"></td>
+        </tr>
+      </table>
+      <table class="symbols">
+        <h2>Symbols</h2>
+        <tr>
+          <th>Symbol</th>
+          <th>Responsibility</th>
+        </tr>
+        <tr>
+          <td>&#9772;</td>
+          <td>Inquisitor</td>
+        </tr>
+        <tr>
+          <td>&#8881;&#8859;&#8880;</td>
+          <td>Quidditch Player</td>
+        </tr>
+        <tr>
+          <td>&#8471;</td>
+          <td>Prefect</td>
+        </tr>
+      </table>
+    </aside>
+
+    <template id="studentLI">
+      <div class="li-wrapper">
+        <p class="name">Miguel Gonzalez</p>
+        <div class="iconswrapper">
+          <div class="mini-icon mini-inquisitor"><p></p></div>
+          <div class="mini-icon mini-quidditch"><p></p></div>
+          <div class="mini-icon mini-prefect"><p></p></div>
+        </div>
+      </div>
+    </template>
 
     <template id="studentModalTemplate">
       <!-- here start the modal -->

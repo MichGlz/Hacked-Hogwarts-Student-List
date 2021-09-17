@@ -21,11 +21,15 @@
   --h1font: "Fredericka the Great", cursive;
 }
 
-body {
-  font-family: "Bubblegum Sans", cursive;
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  font-family: "Bubblegum Sans", cursive;
+  letter-spacing: 2px;
   background-color: rgb(58, 56, 55);
   color: antiquewhite;
 }
@@ -33,17 +37,18 @@ body {
 header {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
+  padding: 2rem 1rem;
   position: fixed;
-  width: 100%;
-  height: var(--headerheight);
+  width: 100vw;
   top: 0;
   left: 0;
   z-index: 5;
   background-color: rgb(58, 56, 55);
+}
+
+header > * + * {
+  margin-top: 1rem;
 }
 
 button {
@@ -66,9 +71,9 @@ button:hover {
 
 .filtersWrapper {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 90%;
 }
 
 .searchwrapper {
@@ -118,17 +123,20 @@ main {
   font-weight: 100;
   font-size: 2.5rem;
   text-align: center;
+  margin-top: 2rem;
 }
 
 #student-list {
+  margin-top: 1rem;
   width: 40%;
   list-style: none;
+  padding: 0;
 }
 
 #student-list li {
   cursor: pointer;
   width: 100%;
-  padding: 0.2rem 0 0 2rem;
+  padding: 0.5rem 2rem;
   font-size: 1.5rem;
   transition: 0.3s;
 }
@@ -159,6 +167,40 @@ li.ravenclaw {
 li.slytherin {
   background-color: #31733a;
   color: #cccccb;
+}
+
+.li-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  /* padding-right: 1rem; */
+}
+
+.li-wrapper p {
+  margin: 0;
+}
+
+.mini-icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #a7a7a725;
+}
+.mini-icon p {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+.mini-quidditch p {
+  font-size: 0.8rem;
+}
+
+.mini-icon.active {
+  color: #0653fa;
 }
 
 /*--------------------------------*/
@@ -290,6 +332,7 @@ li.slytherin {
 
 .iconswrapper {
   display: flex;
+  gap: 5px;
 }
 
 .icon {
@@ -367,12 +410,18 @@ li.slytherin {
   display: block;
   border-bottom: solid 1px black;
   width: 200px;
+  min-height: 1.1rem;
   font-family: var(--machineFont);
   margin-top: 0.2rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+}
+
+.data > p + p {
+  margin-top: 1.5rem;
 }
 
 .bloodType {
+  margin-top: 2rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -386,7 +435,10 @@ li.slytherin {
   position: relative;
   width: 20px;
   height: 20px;
+  margin-left: 1rem;
+  margin-right: 0.5rem;
 }
+
 .bloodwrapper input[type="radio"]::after {
   content: "";
   width: 20px;
@@ -477,4 +529,41 @@ li.slytherin {
 
 .smsbox img {
   width: 80px;
+}
+
+/*---------aside table-----------*/
+
+aside {
+  position: fixed;
+  top: var(--headerheight);
+  left: 2rem;
+}
+
+aside h2 {
+  font-family: roboto;
+  margin-top: 2rem;
+  font-weight: lighter;
+}
+
+th,
+td {
+  border: 1px solid antiquewhite;
+  padding: 5px;
+  font-family: roboto;
+  letter-spacing: 0.05rem;
+  font-weight: lighter;
+}
+td {
+  text-align: center;
+}
+
+table.symbols td:first-child {
+  font-size: 1.2rem;
+}
+
+/*----footer---*/
+
+footer {
+  width: 100%;
+  height: 20vh;
 }

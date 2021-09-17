@@ -27,7 +27,7 @@ const houseColors = {
   slytherin: { color1: "#31733a", color2: "#cccccb" },
 };
 
-//sttings
+//settings
 const settings = {
   filterBy1: "house",
   valueToFilter1: "all",
@@ -46,7 +46,8 @@ let arrayOfExpelledStudents = [];
 let listsOfFamilies;
 
 function start() {
-  fetchLists();
+  const headerHeight = document.querySelector("header").offsetHeight;
+  document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
@@ -55,6 +56,7 @@ function start() {
   document.querySelector("#sort-by").addEventListener("change", setSort);
   document.querySelector("#direction").addEventListener("click", setDirection);
   document.querySelector("#theOtherList").addEventListener("click", displayTheOtherList);
+  fetchLists();
 }
 
 function fetchLists() {
@@ -216,23 +218,23 @@ function getImgUrl(lastName, firstName) {
   let secondPart;
   let imgUrl;
   const prevStudent = arrayOfStudentObject.find((student) => student.lastName === lastName);
-  //------if has last name start
+  //if has last name start
   if (lastName) {
-    //--------- check if last name has " - "----
+    //check if last name has " - "
     if (lastName.includes("-")) {
       firstPart = lastName.split("-")[1];
     } else {
       firstPart = lastName;
     }
 
-    //-----------check if last name is duplicate-------------
+    //check if last name is duplicate
     if (prevStudent) {
       prevStudent.imgUrl = changeImgUrl(prevStudent.imgUrl, prevStudent.firstName);
       secondPart = firstName;
     } else {
       secondPart = firstName[0];
     }
-    //------------get values and lower case
+    //get values and lower case
     const urlUpperCase = `${firstPart}_${secondPart}.png`;
     const urlLowCase = urlUpperCase.toLowerCase();
     imgUrl = urlLowCase;
@@ -303,19 +305,33 @@ function displayList(list) {
 
     //add info in the li element
     xLi.dataset.id = student._id;
-    xLi.textContent = fullName;
+
+    const template = document.querySelector("#studentLI").content;
+
+    //clone it
+    const copy = template.cloneNode(true);
+
+    copy.querySelector(".name").textContent = fullName;
 
     if (student.inquisitor) {
-      xLi.innerHTML += " &#9772;";
+      copy.querySelector(".mini-inquisitor p").innerHTML += " &#9772;";
+      // xLi.innerHTML += " &#9772;";
     }
 
     if (student.quidditchPlayer) {
-      xLi.innerHTML += " &#9854;";
+      copy.querySelector(".mini-quidditch p").innerHTML += "&#8881;&#8859;&#8880;";
+      // xLi.innerHTML += " &#9854;";
     }
 
     if (student.prefect) {
-      xLi.innerHTML += " &#128737;";
+      copy.querySelector(".mini-prefect p").innerHTML += " &#8471;";
+      // xLi.innerHTML += " &#128737;";
     }
+
+    //grab parent
+
+    //append
+    xLi.appendChild(copy);
 
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", getStudentId);
@@ -324,6 +340,37 @@ function displayList(list) {
       studentUL.appendChild(xLi);
     }
   });
+
+  displayNumbers();
+}
+
+function displayNumbers() {
+  if (settings.isExpelledList) {
+    const numberOfStudentsGryffindor = arrayOfStudentObject.filter((student) => student.house === "Gryffindor" && student.expelled).length;
+    document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
+    const numberOfStudentsHufflepuff = arrayOfStudentObject.filter((student) => student.house === "Hufflepuff" && student.expelled).length;
+    document.querySelector("#no-hufflepuff").textContent = numberOfStudentsHufflepuff;
+    const numberOfStudentsRavenclaw = arrayOfStudentObject.filter((student) => student.house === "Ravenclaw" && student.expelled).length;
+    document.querySelector("#no-ravenclaw").textContent = numberOfStudentsRavenclaw;
+    const numberOfStudentsSlytherin = arrayOfStudentObject.filter((student) => student.house === "Slytherin" && student.expelled).length;
+    document.querySelector("#no-slytherin").textContent = numberOfStudentsSlytherin;
+  } else {
+    const numberOfStudentsGryffindor = arrayOfStudentObject.filter((student) => student.house === "Gryffindor" && !student.expelled).length;
+    document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
+    const numberOfStudentsHufflepuff = arrayOfStudentObject.filter((student) => student.house === "Hufflepuff" && !student.expelled).length;
+    document.querySelector("#no-hufflepuff").textContent = numberOfStudentsHufflepuff;
+    const numberOfStudentsRavenclaw = arrayOfStudentObject.filter((student) => student.house === "Ravenclaw" && !student.expelled).length;
+    document.querySelector("#no-ravenclaw").textContent = numberOfStudentsRavenclaw;
+    const numberOfStudentsSlytherin = arrayOfStudentObject.filter((student) => student.house === "Slytherin" && !student.expelled).length;
+    document.querySelector("#no-slytherin").textContent = numberOfStudentsSlytherin;
+  }
+
+  const numberOfStudentsActive = arrayOfStudentObject.filter((student) => !student.expelled).length;
+  document.querySelector("#no-active").textContent = numberOfStudentsActive;
+  const numberOfStudentsExpelled = arrayOfStudentObject.filter((student) => student.expelled).length;
+  document.querySelector("#no-expelled").textContent = numberOfStudentsExpelled;
+  const numberOfStudentsDisplayed = document.querySelectorAll("#student-list li").length;
+  document.querySelector("#no-displayed").textContent = numberOfStudentsDisplayed;
 }
 
 function getStudentId(e) {
@@ -386,9 +433,7 @@ function displayModalInfo(studentID) {
     copy.querySelector(".inquisitorial").style.pointerEvents = "all";
     copy.querySelector(".inquisitorial").addEventListener("click", function () {
       studentObj.inquisitor = !studentObj.inquisitor;
-      buildList();
-      refreshModal();
-      displayModalInfo(studentID);
+      refreshModal(studentID);
     });
   }
 
@@ -407,9 +452,7 @@ function displayModalInfo(studentID) {
       tryToMakeAPrefect(studentObj);
     }
 
-    buildList();
-    refreshModal();
-    displayModalInfo(studentID);
+    refreshModal(studentID);
   }
 
   //diplay quidditch logo
@@ -420,9 +463,7 @@ function displayModalInfo(studentID) {
   //select a quidditch player
   copy.querySelector(".quidditch").addEventListener("click", function () {
     studentObj.quidditchPlayer = !studentObj.quidditchPlayer;
-    buildList();
-    refreshModal();
-    displayModalInfo(studentID);
+    refreshModal(studentID);
   });
 
   //display expelled
@@ -437,9 +478,7 @@ function displayModalInfo(studentID) {
     studentObj.inquisitor = false;
     studentObj.prefect = false;
     studentObj.quidditchPlayer = false;
-    buildList();
-    refreshModal();
-    displayModalInfo(studentID);
+    refreshModal(studentID);
     setTimeout(removeModal, 600);
   });
 
@@ -463,6 +502,14 @@ function tryToMakeAPrefect(studentSelected) {
   }
 }
 
+function studentSelectedToPrefect(theOtherStudent, studentSelected) {
+  theOtherStudent.prefect = false;
+  studentSelected.prefect = true;
+  refreshModal(studentSelected._id);
+  document.querySelector(".alert").remove();
+  document.querySelector(".smsboxwrapper").remove();
+}
+
 function displayWarningPrefects(studentSelected, studentA, studentB) {
   //grab the template
   const template = document.querySelector("#warningprefects").content;
@@ -478,25 +525,14 @@ function displayWarningPrefects(studentSelected, studentA, studentB) {
   copy.querySelector("#studentA img").src = `/assets/students/${studentA.imgUrl}`;
   copy.querySelector("#studentA h2").textContent = fullNameConstructor(studentA);
   copy.querySelector("#btn-studentA").addEventListener("click", () => {
-    studentA.prefect = false;
-    studentSelected.prefect = true;
-    buildList();
-    refreshModal();
-    displayModalInfo(studentSelected._id);
-    document.querySelector(".alert").remove();
-    document.querySelector(".smsboxwrapper").remove();
+    studentSelectedToPrefect(studentA, studentSelected);
   });
   copy.querySelector("#studentB img").src = `/assets/students/${studentB.imgUrl}`;
   copy.querySelector("#studentB h2").textContent = fullNameConstructor(studentB);
   copy.querySelector("#btn-studentB").addEventListener("click", () => {
-    studentB.prefect = false;
-    studentSelected.prefect = true;
-    buildList();
-    refreshModal();
-    displayModalInfo(studentSelected._id);
-    document.querySelector(".alert").remove();
-    document.querySelector(".smsboxwrapper").remove();
+    studentSelectedToPrefect(studentB, studentSelected);
   });
+
   //grab parent
   const parent = document.querySelector("main");
   //append
@@ -518,9 +554,11 @@ function displayTheOtherList() {
   buildList();
 }
 
-function refreshModal() {
+function refreshModal(studentID) {
+  buildList();
   document.querySelector(".studentcardwrapper").remove();
   document.querySelector("#studentmodal").remove();
+  displayModalInfo(studentID);
 }
 
 function removeModal() {
