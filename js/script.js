@@ -343,6 +343,13 @@ function displayList(list) {
     }
   });
 
+  if (list < 1) {
+    let xLi = document.createElement("LI");
+    xLi.classList.add("emptyList");
+    xLi.innerHTML = "<h2>🧙</h2><h3>There are not matches!</h3>";
+    studentUL.appendChild(xLi);
+  }
+
   displayNumbers();
 }
 

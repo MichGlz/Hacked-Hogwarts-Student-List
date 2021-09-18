@@ -13,7 +13,7 @@
 :root {
   --headerheight: 150px;
   --houseFirstLetter: "Germania One", cursive;
-  --bodyFont: "Bubblegum Sans", cursive;
+  --bodyFont: "Life Savers", cursive;
   --machineFont: "Special Elite", cursive;
   --houseColor1: #660d10;
   --houseColor2: #e19f27;
@@ -30,7 +30,7 @@
 }
 
 body {
-  font-family: "Bubblegum Sans", cursive;
+  font-family: var(--bodyFont);
   letter-spacing: 2px;
   background-color: var(--bodyBackground);
   color: antiquewhite;
@@ -159,6 +159,7 @@ main {
   padding: 0.5rem 2rem;
   font-size: 1.5rem;
   transition: 0.3s;
+  font-weight: bold;
 }
 
 #student-list li:hover {
@@ -221,6 +222,21 @@ li.slytherin {
 
 .mini-icon.active {
   color: #0653fa;
+}
+
+li.emptyList {
+  pointer-events: none;
+}
+.emptyList h3 {
+  font-family: var(--bodyFont);
+  font-weight: 100;
+  font-size: 2.5rem;
+  text-align: center;
+  letter-spacing: 4px;
+}
+.emptyList h2 {
+  font-size: 5rem;
+  text-align: center;
 }
 
 /*--------------------------------*/
@@ -338,7 +354,7 @@ li.slytherin {
 }
 
 .housename h1 {
-  font-family: var(--bodyFont);
+  font-family: "Bubblegum Sans", cursive;
   font-weight: 500;
   color: rgb(46, 45, 45);
   font-size: 3.5rem;
@@ -563,6 +579,7 @@ aside {
 
 aside h2 {
   font-family: roboto;
+  font-family: "Life Savers", cursive;
   margin-top: 2rem;
   font-weight: lighter;
 }
@@ -572,7 +589,8 @@ td {
   border: 1px solid antiquewhite;
   padding: 5px;
   font-family: roboto;
-  letter-spacing: 0.05rem;
+  font-family: "Life Savers", cursive;
+  letter-spacing: 0.2rem;
   font-weight: lighter;
 }
 td {
@@ -581,6 +599,7 @@ td {
 
 table.symbols td:first-child {
   font-size: 1.2rem;
+  letter-spacing: normal;
 }
 
 /*----footer---*/
@@ -590,6 +609,7 @@ footer {
   height: 20vh;
 }
 
+/*------------------*/
 .blackscreen.active {
   position: fixed;
   top: 0;
