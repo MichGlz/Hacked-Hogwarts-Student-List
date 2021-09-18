@@ -37,6 +37,7 @@ const settings = {
   valueToFilter3: "all",
   sortBy: "name",
   sortDir: "asc",
+  SearchBarStr: "",
   isExpelledList: false,
   isModalInfo: false,
   isHackedTheSystem: false,
@@ -53,7 +54,7 @@ function start() {
     select.addEventListener("change", setFilter);
   });
   document.querySelector("#resetFilters").addEventListener("click", resetFilters);
-  document.querySelector("#search-names").addEventListener("input", searchBar);
+  document.querySelector("#search-names").addEventListener("input", setSearchBar);
   document.querySelector("#sort-by").addEventListener("change", setSort);
   document.querySelector("#direction").addEventListener("click", setDirection);
   document.querySelector("#theOtherList").addEventListener("click", displayTheOtherList);
@@ -599,17 +600,23 @@ function removeApear(e) {
 }
 
 ////////////////search bar////////////////////////////////////////////////
-function searchBar(e) {
+function setSearchBar(e) {
   let word = e.target.value.toLowerCase();
+  settings.SearchBarStr = word;
 
   if (word === "hackthesystem" && settings.isHackedTheSystem === false) {
     e.target.value = "";
+    settings.SearchBarStr = "";
     hackTheSystem();
     return;
   }
-  let newList = buildList();
-  let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(word) || student.lastName.toLowerCase().includes(word) || student.middleName.toLowerCase().includes(word));
-  displayList(searchList);
+  buildList();
+}
+function SearchBar(newList) {
+  // let newList = buildList();
+  let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(settings.SearchBarStr) || student.lastName.toLowerCase().includes(settings.SearchBarStr) || student.middleName.toLowerCase().includes(settings.SearchBarStr));
+  // displayList(searchList);
+  return searchList;
 }
 
 ////////////////////////filter & sort///////////////////////////////
@@ -705,9 +712,10 @@ function buildList() {
     recalculateBloodStatus();
   }
   const currentList = filterList(arrayOfStudentObject);
-  const sortedList = sortList(currentList);
+  const searchedList = SearchBar(currentList);
+  const sortedList = sortList(searchedList);
   displayList(sortedList);
-  return sortedList;
+  // return sortedList;
 }
 
 /////////////////////////////hack the system//////////////////
@@ -721,6 +729,7 @@ function hackTheSystem() {
     settings.isHackedTheSystem = true;
     const fullname = 'Miguel German "Mich" Gonzalez';
     const house = "Ravenclaw";
+
     PushMyOwnStudentObject(fullname, house);
     recalculateBloodStatus();
   }
