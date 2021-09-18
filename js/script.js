@@ -494,7 +494,7 @@ function displayModalInfo(studentID) {
     refreshModal(studentID);
     setTimeout(removeModal, 600);
     if (studentID === "007") {
-      document.querySelector(".studentpic").style.backgroundImage = `url(../assets/students/gonzalez_m2.png)`;
+      document.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/gonzalez_m2.png)`;
       setTimeout(() => {
         studentObj.expelled = false;
         displayModalInfo(studentID);
