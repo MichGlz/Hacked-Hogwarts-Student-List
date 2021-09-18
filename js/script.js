@@ -49,6 +49,7 @@ let listsOfFamilies;
 function start() {
   const headerHeight = document.querySelector("header").offsetHeight;
   document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
+  document.querySelector("#listTitle").style.top = `calc(var(--headerheight) - 2px);`;
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
