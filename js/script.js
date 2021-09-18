@@ -403,12 +403,12 @@ function displayModalInfo(studentID) {
   copy.querySelector("#studentmodal").addEventListener("click", removeModal);
 
   //styling the card
-  copy.querySelector(".crest").style.backgroundImage = `url(../assets/${house}_crest_monoChrom.png)`;
+  copy.querySelector(".crest").style.backgroundImage = `url(./assets/${house}_crest_monoChrom.png)`;
   copy.querySelector(".housename h1").innerHTML = `<span class="firstLetter">${studentObj.house[0]}</span>${studentObj.house.substring(1)}</h1>`;
 
   //changing picture
   if (studentObj.imgUrl) {
-    copy.querySelector(".studentpic").style.backgroundImage = `url(../assets/students/${studentObj.imgUrl})`;
+    copy.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/${studentObj.imgUrl})`;
   }
 
   //general info
