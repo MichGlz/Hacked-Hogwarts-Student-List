@@ -543,12 +543,12 @@ function displayWarningPrefects(studentSelected, studentA, studentB) {
     document.querySelector(".alert").remove();
     document.querySelector(".smsboxwrapper").remove();
   });
-  copy.querySelector("#studentA img").src = `/assets/students/${studentA.imgUrl}`;
+  copy.querySelector("#studentA img").src = `assets/students/${studentA.imgUrl}`;
   copy.querySelector("#studentA h2").textContent = fullNameConstructor(studentA);
   copy.querySelector("#btn-studentA").addEventListener("click", () => {
     studentSelectedToPrefect(studentA, studentSelected);
   });
-  copy.querySelector("#studentB img").src = `/assets/students/${studentB.imgUrl}`;
+  copy.querySelector("#studentB img").src = `assets/students/${studentB.imgUrl}`;
   copy.querySelector("#studentB h2").textContent = fullNameConstructor(studentB);
   copy.querySelector("#btn-studentB").addEventListener("click", () => {
     studentSelectedToPrefect(studentB, studentSelected);
