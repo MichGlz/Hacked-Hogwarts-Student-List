@@ -141,7 +141,7 @@ main {
   text-align: center;
   margin-top: 2rem;
   position: sticky;
-  top: calc(var(--headerheight) - 2px);
+  top: calc(var(--headerheight) - 9px);
   z-index: var(--headerZindex);
   background-color: var(--bodyBackground);
 }
