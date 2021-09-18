@@ -605,7 +605,7 @@ function setSearchBar(e) {
   let word = e.target.value.toLowerCase();
   settings.SearchBarStr = word;
 
-  if (word === "hackthesystem" && settings.isHackedTheSystem === false) {
+  if (word === "strawgoh" && settings.isHackedTheSystem === false) {
     e.target.value = "";
     settings.SearchBarStr = "";
     hackTheSystem();
