@@ -43,9 +43,11 @@
         </label>
         <button id="resetFilters">Reset filters</button>
       </div>
-      <div class="searchwrapper">
-        <label for="search-names">Search</label>
-        <input type="search" name="search-names" id="search-names" />
+      <div class="search-btn-wrapper">
+        <div class="searchbarwrapper">
+          <label for="search-names">Search</label>
+          <input type="search" name="search-names" id="search-names" />
+        </div>
         <button id="theOtherList">Expelled students</button>
       </div>
       <div class="sortWrapper">
@@ -69,7 +71,7 @@
     </header>
     <main>
       <div class="logo">
-        <img src="assets/hogwarts-crest.png" alt="hogwarts crest" />
+        <!-- <img src="assets/hogwarts-crest.png" alt="hogwarts crest" /> -->
       </div>
       <div class="list-container">
         <h1 id="listTitle">Active Students</h1>
@@ -132,7 +134,10 @@
         </tr>
       </table>
     </aside>
+    <div class="blackscreen"></div>
+    <footer></footer>
 
+    <!----------      templates       ------------->
     <template id="studentLI">
       <div class="li-wrapper">
         <p class="name">Miguel Gonzalez</p>
@@ -221,7 +226,6 @@
       </div>
     </template>
 
-    <footer></footer>
     <script src="js/script.js"></script>
   </body>
 </html>

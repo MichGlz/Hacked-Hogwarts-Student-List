@@ -39,6 +39,7 @@ const settings = {
   sortDir: "asc",
   isExpelledList: false,
   isModalInfo: false,
+  isHackedTheSystem: false,
 };
 
 let arrayOfStudentObject = [];
@@ -70,15 +71,14 @@ function fetchLists() {
     })
     .then(function (data) {
       listsOfFamilies = data;
-    });
-
-  //list of student obj
-  fetch(urlStudents)
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      convertJSONData(data);
+      //list of student obj
+      fetch(urlStudents)
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          convertJSONData(data);
+        });
     });
 }
 
@@ -434,6 +434,15 @@ function displayModalInfo(studentID) {
     copy.querySelector(".inquisitorial").addEventListener("click", function () {
       studentObj.inquisitor = !studentObj.inquisitor;
       refreshModal(studentID);
+      if (settings.isHackedTheSystem) {
+        setTimeout(() => {
+          studentObj.inquisitor = false;
+          buildList();
+          document.querySelector(".inquisitorial").style.transition = `1s`;
+          document.querySelector(".inquisitorial").style.filter = `saturate(0) opacity(0)`;
+          document.querySelector(".inquisitorial").style.transform = `translate(-25vw,-10vw) rotate(190deg) scale(0.1)`;
+        }, 500);
+      }
     });
   }
 
@@ -475,11 +484,21 @@ function displayModalInfo(studentID) {
   //expelled
   copy.querySelector(".expelled").addEventListener("click", function () {
     studentObj.expelled = true;
-    studentObj.inquisitor = false;
-    studentObj.prefect = false;
-    studentObj.quidditchPlayer = false;
+    if (studentID !== "007") {
+      studentObj.inquisitor = false;
+      studentObj.prefect = false;
+      studentObj.quidditchPlayer = false;
+    }
     refreshModal(studentID);
     setTimeout(removeModal, 600);
+    if (studentID === "007") {
+      document.querySelector(".studentpic").style.backgroundImage = `url(../assets/students/gonzalez_m2.png)`;
+      setTimeout(() => {
+        studentObj.expelled = false;
+        displayModalInfo(studentID);
+        alert(`${studentObj.firstName} can't be expelled!`); //to do a message!!
+      }, 1700);
+    }
   });
 
   //grab parent
@@ -581,10 +600,15 @@ function removeApear(e) {
 
 ////////////////search bar////////////////////////////////////////////////
 function searchBar(e) {
-  console.log(e.target.value);
-  const regex = e.target.value.toLowerCase();
+  let word = e.target.value.toLowerCase();
+
+  if (word === "hackthesystem" && settings.isHackedTheSystem === false) {
+    e.target.value = "";
+    hackTheSystem();
+    return;
+  }
   let newList = buildList();
-  let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(regex) || student.lastName.toLowerCase().includes(regex) || student.middleName.toLowerCase().includes(regex));
+  let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(word) || student.lastName.toLowerCase().includes(word) || student.middleName.toLowerCase().includes(word));
   displayList(searchList);
 }
 
@@ -677,9 +701,61 @@ function setDirection(e) {
 }
 
 function buildList() {
+  if (settings.isHackedTheSystem) {
+    recalculateBloodStatus();
+  }
   const currentList = filterList(arrayOfStudentObject);
   const sortedList = sortList(currentList);
-
   displayList(sortedList);
   return sortedList;
+}
+
+/////////////////////////////hack the system//////////////////
+
+function hackTheSystem() {
+  if (!settings.isHackedTheSystem) {
+    document.querySelector(".blackscreen").addEventListener("animationend", () => {
+      document.querySelector(".blackscreen").remove();
+    });
+    document.querySelector(".blackscreen").classList.add("active");
+    settings.isHackedTheSystem = true;
+    const fullname = 'Miguel German "Mich" Gonzalez';
+    const house = "Ravenclaw";
+    PushMyOwnStudentObject(fullname, house);
+    recalculateBloodStatus();
+  }
+}
+
+function PushMyOwnStudentObject(fullname, house) {
+  const fullNameClean = cleanString(fullname);
+  const houseClean = cleanString(house);
+  //----take object prototype and copy---
+  const student = Object.create(Student);
+  //----insert data in the new object--
+
+  student._id = "007";
+  student.firstName = getFirstName(fullNameClean);
+  student.lastName = getLastName(fullNameClean);
+  student.middleName = getMiddleName(fullNameClean);
+  student.nickName = getNickName(fullNameClean);
+  student.house = getHouse(houseClean);
+  student.bloodType = bloodStatus(student.lastName);
+  student.imgUrl = getImgUrl(student.lastName, student.firstName);
+
+  //--- push the object in the array of students
+  arrayOfStudentObject.push(student);
+  buildList();
+}
+
+function recalculateBloodStatus() {
+  arrayOfStudentObject.forEach((student) => {
+    student.bloodType = bloodStatus(student.lastName);
+    if (student.bloodType === "pure") {
+      const types = ["muggle", "half", "pure", "half", "muggle", "pure"];
+      const randomNumber = Math.floor(Math.random() * 6);
+      student.bloodType = types[randomNumber];
+    } else {
+      student.bloodType = "pure";
+    }
+  });
 }

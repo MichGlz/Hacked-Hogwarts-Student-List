@@ -18,7 +18,9 @@
   --houseColor1: #660d10;
   --houseColor2: #e19f27;
   --cardColor: rgb(255, 255, 225);
+  --bodyBackground: rgb(58, 56, 55);
   --h1font: "Fredericka the Great", cursive;
+  --headerZindex: 5;
 }
 
 * {
@@ -30,7 +32,7 @@
 body {
   font-family: "Bubblegum Sans", cursive;
   letter-spacing: 2px;
-  background-color: rgb(58, 56, 55);
+  background-color: var(--bodyBackground);
   color: antiquewhite;
 }
 
@@ -43,8 +45,8 @@ header {
   width: 100vw;
   top: 0;
   left: 0;
-  z-index: 5;
-  background-color: rgb(58, 56, 55);
+  z-index: var(--headerZindex);
+  background-color: var(--bodyBackground);
 }
 
 header > * + * {
@@ -76,16 +78,23 @@ button:hover {
   width: 90%;
 }
 
-.searchwrapper {
-  width: 100%;
+select {
+  padding: 0.2rem 1rem;
+  border-radius: 10px;
+}
+
+.search-btn-wrapper {
+  width: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
 
 #search-names {
-  width: 30%;
+  width: 30vw;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
 }
 
 .filter-label {
@@ -101,13 +110,19 @@ main {
 
 .logo {
   width: 100%;
+  height: 30vh;
+  background-image: url(../assets/hogwarts-crest.png);
+  background-size: contain;
+
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.logo img {
+/* .logo img {
   width: 150px;
   margin-left: 50%;
   transform: translateX(-50%);
-}
+} */
 
 /*-----------student list----------*/
 .list-container {
@@ -119,11 +134,16 @@ main {
 }
 
 .list-container h1 {
+  width: 100%;
   font-family: var(--h1font);
   font-weight: 100;
   font-size: 2.5rem;
   text-align: center;
   margin-top: 2rem;
+  position: sticky;
+  top: calc(var(--headerheight) - 2px);
+  z-index: var(--headerZindex);
+  background-color: var(--bodyBackground);
 }
 
 #student-list {
@@ -537,6 +557,7 @@ aside {
   position: fixed;
   top: var(--headerheight);
   left: 2rem;
+  z-index: var(--headerZindex);
 }
 
 aside h2 {
@@ -566,4 +587,37 @@ table.symbols td:first-child {
 footer {
   width: 100%;
   height: 20vh;
+}
+
+.blackscreen.active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  /* background-color: #000000; */
+  opacity: 0;
+  animation: blinck;
+  animation-iteration-count: 7;
+  animation-duration: 0.1s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+@keyframes blinck {
+  0% {
+    background-color: #000;
+    background-image: url(../assets/skul.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+  }
+  100% {
+    background-color: #f7f7f7;
+    background-position: center;
+    opacity: 0;
+  }
 }
