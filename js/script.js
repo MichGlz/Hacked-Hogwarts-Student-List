@@ -44,7 +44,6 @@ const settings = {
 };
 
 let arrayOfStudentObject = [];
-let arrayOfExpelledStudents = [];
 let listsOfFamilies;
 
 function start() {
