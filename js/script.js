@@ -431,7 +431,7 @@ function displayModalInfo(studentID) {
 
   //inquisitorial filter
   if (studentObj.house === "Slytherin" || studentObj.bloodType === "pure") {
-    copy.querySelector(".inquisitorial").style.backgroundImage = `url(../assets/inquisitorial_badge.png)`;
+    copy.querySelector(".inquisitorial").style.backgroundImage = `url(./assets/inquisitorial_badge.png)`;
     copy.querySelector(".inquisitorial").style.pointerEvents = "all";
     copy.querySelector(".inquisitorial").addEventListener("click", function () {
       studentObj.inquisitor = !studentObj.inquisitor;
