@@ -241,7 +241,7 @@ function getImgUrl(lastName, firstName) {
     const urlLowCase = urlUpperCase.toLowerCase();
     imgUrl = urlLowCase;
   } else {
-    imgUrl = undefined;
+    imgUrl = `undefined.png`;
   }
   // console.log(e.imgUrl);
   return imgUrl;
@@ -409,9 +409,7 @@ function displayModalInfo(studentID) {
   copy.querySelector(".housename h1").innerHTML = `<span class="firstLetter">${studentObj.house[0]}</span>${studentObj.house.substring(1)}</h1>`;
 
   //changing picture
-  if (studentObj.imgUrl) {
-    copy.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/${studentObj.imgUrl})`;
-  }
+  copy.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/${studentObj.imgUrl})`;
 
   //general info
   copy.querySelector(".firstname").textContent = studentObj.firstName;
@@ -427,6 +425,10 @@ function displayModalInfo(studentID) {
   //display inquisitor badge
   if (studentObj.inquisitor) {
     copy.querySelector(".inquisitorial").style.filter = `saturate(1) opacity(1)`;
+    if (settings.isHackedTheSystem) {
+      copy.querySelector(".inquisitorial").style.backgroundImage = `url(./assets/inquisitorial_badge.png)`;
+      removeInquisitorBadge(studentObj);
+    }
   }
 
   //inquisitorial filter
@@ -437,13 +439,7 @@ function displayModalInfo(studentID) {
       studentObj.inquisitor = !studentObj.inquisitor;
       refreshModal(studentID);
       if (settings.isHackedTheSystem) {
-        setTimeout(() => {
-          studentObj.inquisitor = false;
-          buildList();
-          document.querySelector(".inquisitorial").style.transition = `1s`;
-          document.querySelector(".inquisitorial").style.filter = `saturate(0) opacity(0)`;
-          document.querySelector(".inquisitorial").style.transform = `translate(-25vw,-10vw) rotate(190deg) scale(0.1)`;
-        }, 500);
+        removeInquisitorBadge(studentObj);
       }
     });
   }
@@ -507,6 +503,16 @@ function displayModalInfo(studentID) {
   const parent = document.querySelector("main");
   //append
   parent.appendChild(copy);
+}
+
+function removeInquisitorBadge(studentObj) {
+  setTimeout(() => {
+    studentObj.inquisitor = false;
+    buildList();
+    document.querySelector(".inquisitorial").style.transition = `1.5s`;
+    document.querySelector(".inquisitorial").style.filter = `saturate(0) opacity(0)`;
+    document.querySelector(".inquisitorial").style.transform = `translate(-25vw,-10vw) rotate(190deg) scale(0.1)`;
+  }, 500);
 }
 
 function tryToMakeAPrefect(studentSelected) {
