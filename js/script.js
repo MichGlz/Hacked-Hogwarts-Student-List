@@ -49,8 +49,8 @@ let listsOfFamilies;
 function start() {
   const headerHeight = document.querySelector("header").offsetHeight;
   document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
-  document.querySelector("#listTitle").style.top = `calc(var(--headerheight) - 2px)`;
-  document.querySelector("main").style.marginTop = `calc(var(--headerheight) + 2rem)`;
+  document.querySelector("#listTitle").style.top = `${headerHeight}px)`;
+  document.querySelector("main").style.marginTop = `calc(${headerHeight}px + 2rem)`;
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
