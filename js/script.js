@@ -5,6 +5,7 @@ window.addEventListener("DOMContentLoaded", start);
 //object prototype
 const Student = {
   _id: undefined,
+  fullName: "",
   firstName: "",
   lastName: "",
   middleName: "",
@@ -47,10 +48,6 @@ let arrayOfStudentObject = [];
 let listsOfFamilies;
 
 function start() {
-  const headerHeight = document.querySelector("header").offsetHeight;
-  document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
-  document.querySelector(".list-container h1").style.top = `${headerHeight - 9}px`;
-  document.querySelector("main").style.marginTop = `calc(${headerHeight}px + 2rem)`;
   document.querySelectorAll(".filtersWrapper select").forEach((select) => {
     select.addEventListener("change", setFilter);
   });
@@ -59,13 +56,28 @@ function start() {
   document.querySelector("#sort-by").addEventListener("change", setSort);
   document.querySelector("#direction").addEventListener("click", setDirection);
   document.querySelector("#theOtherList").addEventListener("click", displayTheOtherList);
+  calculateHeaderHeight();
   fetchLists();
+}
+
+function calculateHeaderHeight() {
+  const headerHeight = document.querySelector("header").offsetHeight;
+  document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
 }
 
 function fetchLists() {
   let urlStudents = "https://petlatkea.dk/2021/hogwarts/students.json";
   let urlFamilyArrays = "https://petlatkea.dk/2021/hogwarts/families.json";
 
+  function fetchStudents() {
+    fetch(urlStudents)
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
+        convertJSONData(data);
+      });
+  }
   //last names by type of blood
   fetch(urlFamilyArrays)
     .then(function (res) {
@@ -73,14 +85,7 @@ function fetchLists() {
     })
     .then(function (data) {
       listsOfFamilies = data;
-      //list of student obj
-      fetch(urlStudents)
-        .then(function (res) {
-          return res.json();
-        })
-        .then(function (data) {
-          convertJSONData(data);
-        });
+      fetchStudents();
     });
 }
 
@@ -93,7 +98,7 @@ function convertJSONData(studentsData) {
     //----take object prototype and copy---
     const student = Object.create(Student);
     //----insert data in the new object--
-
+    student.fullName = capitalizeString(fullNameClean);
     student._id = createID(n);
     student.firstName = getFirstName(fullNameClean);
     student.lastName = getLastName(fullNameClean);
@@ -106,8 +111,7 @@ function convertJSONData(studentsData) {
     //--- push the object in the array of students
     arrayOfStudentObject.push(student);
   });
-
-  console.table(arrayOfStudentObject);
+  // console.table(arrayOfStudentObject);
   displayList(arrayOfStudentObject);
 }
 
@@ -121,17 +125,27 @@ function cleanString(element) {
 }
 
 function capitalizeString(word) {
-  let wordWithUpperCase;
-  let word2;
-  wordWithUpperCase = word.replace(word[0], word[0].toUpperCase());
-  if (wordWithUpperCase.includes("-")) {
-    word2 = word.split("-")[1];
-    let secondWordWithUpperCase = capitalizeString(word2);
-    // let secondWordWithUpperCase = word2.replace(word2[0], word2[0].toUpperCase());
-    wordWithUpperCase = `${wordWithUpperCase.split("-")[0]}-${secondWordWithUpperCase}`;
-  }
-  // console.log(wordWithUpperCase);
-  return wordWithUpperCase;
+  word = word.trim();
+  word = word.toLowerCase();
+  let words = word.split(" ");
+  let newWords = [];
+  words.forEach((word) => {
+    word = word.trim();
+    if (word.includes('"')) {
+      const chIndex = word.indexOf('"') + 1;
+      word = word.replace(word[chIndex], word[chIndex].toUpperCase());
+    } else {
+      word = word.replace(word[0], word[0].toUpperCase());
+    }
+    if (word.includes("-")) {
+      const chIndex = word.indexOf("-") + 1;
+      word = word.replace(word[chIndex], word[chIndex].toUpperCase());
+    }
+    newWords.push(word);
+  });
+
+  const newWordsString = newWords.join(" ");
+  return newWordsString;
 }
 
 function getFirstName(fullName) {
@@ -165,14 +179,21 @@ function getMiddleName(fullName) {
   let middleName;
   if (fullName.split(" ").length > 2) {
     middleNameLowerCase = fullName.substring(fullName.indexOf(" ") + 1, fullName.lastIndexOf(" "));
+    console.log(middleNameLowerCase);
     middleName = capitalizeString(middleNameLowerCase);
-    if (middleName.includes(`"`)) {
+    console.log(middleName);
+    if (middleName.includes(`"`) && middleName.split(" ") < 2) {
       middleName = "";
+    } else if (middleName.includes(`"`)) {
+      let middleNames = middleName.split(" ");
+      const wordIndex = middleNames.findIndex((word) => word.includes('"'));
+      let removed = middleNames.splice(wordIndex, 1);
+      middleName = middleNames.join(" ");
     }
   } else {
     middleName = "";
   }
-  // console.log(middleName);
+  console.log(`line 207 ${middleName}`);
   return middleName;
 }
 
@@ -303,8 +324,8 @@ function displayList(list) {
     //create li
     let xLi = document.createElement("LI");
     //reconstruct full name string
-    const fullName = fullNameConstructor(student);
-
+    // const fullName = fullNameConstructor(student);
+    const fullName = student.fullName;
     //add info in the li element
     xLi.dataset.id = student._id;
 
@@ -744,18 +765,18 @@ function hackTheSystem() {
     const fullname = 'Miguel German "Mich" Gonzalez';
     const house = "Ravenclaw";
 
-    PushMyOwnStudentObject(fullname, house);
+    pushMyStudentObject(fullname, house);
     recalculateBloodStatus();
   }
 }
 
-function PushMyOwnStudentObject(fullname, house) {
+function pushMyStudentObject(fullname, house) {
   const fullNameClean = cleanString(fullname);
   const houseClean = cleanString(house);
   //----take object prototype and copy---
   const student = Object.create(Student);
   //----insert data in the new object--
-
+  student.fullName = capitalizeString(fullNameClean);
   student._id = "007";
   student.firstName = getFirstName(fullNameClean);
   student.lastName = getLastName(fullNameClean);
