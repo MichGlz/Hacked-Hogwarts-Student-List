@@ -179,9 +179,9 @@ function getMiddleName(fullName) {
   let middleName;
   if (fullName.split(" ").length > 2) {
     middleNameLowerCase = fullName.substring(fullName.indexOf(" ") + 1, fullName.lastIndexOf(" "));
-    console.log(middleNameLowerCase);
+
     middleName = capitalizeString(middleNameLowerCase);
-    console.log(middleName);
+
     if (middleName.includes(`"`) && middleName.split(" ") < 2) {
       middleName = "";
     } else if (middleName.includes(`"`)) {
@@ -193,7 +193,7 @@ function getMiddleName(fullName) {
   } else {
     middleName = "";
   }
-  console.log(`line 207 ${middleName}`);
+
   return middleName;
 }
 
@@ -303,9 +303,6 @@ function createID(n) {
 ////////////////////////////////display/////////////////////////////
 
 function displayList(list) {
-  //declare condition for flag
-  let condition;
-
   //grab parent
   const studentUL = document.getElementById("student-list");
 
@@ -314,13 +311,6 @@ function displayList(list) {
 
   //displaying li
   list.forEach((student) => {
-    //flag expelled students list
-    if (settings.isExpelledList) {
-      condition = student.expelled;
-    } else {
-      condition = !student.expelled;
-    }
-
     //create li
     let xLi = document.createElement("LI");
     //reconstruct full name string
@@ -359,16 +349,14 @@ function displayList(list) {
     xLi.classList.add(`${student.house.toLowerCase()}`);
     xLi.addEventListener("click", getStudentId);
 
-    if (condition) {
-      studentUL.appendChild(xLi);
-    }
+    studentUL.appendChild(xLi);
   });
 
-  if (list < 1) {
-    let xLi = document.createElement("LI");
-    xLi.classList.add("emptyList");
-    xLi.innerHTML = "<h2>🧙</h2><h3>There are not matches!</h3>";
-    studentUL.appendChild(xLi);
+  if (list.length < 1) {
+    let emptyLi = document.createElement("LI");
+    emptyLi.classList.add("emptyList");
+    emptyLi.innerHTML = "<h2>🧙</h2><h3>There are not matches!</h3>";
+    studentUL.appendChild(emptyLi);
   }
 
   displayNumbers();
@@ -664,7 +652,10 @@ function setFilter() {
 }
 
 function filterList(allStudentsList) {
-  let list1 = allStudentsList;
+  let list1 = allStudentsList.filter((student) => !student.expelled);
+  if (settings.isExpelledList) {
+    list1 = allStudentsList.filter((student) => student.expelled);
+  }
   let list2;
 
   //repeat the filtering for each value of the filters
@@ -749,6 +740,7 @@ function buildList() {
   const currentList = filterList(arrayOfStudentObject);
   const searchedList = SearchBar(currentList);
   const sortedList = sortList(searchedList);
+
   displayList(sortedList);
   // return sortedList;
 }
