@@ -748,6 +748,7 @@ function hackTheSystem() {
     document.querySelector(".blackscreen").addEventListener("animationend", () => {
       document.querySelector(".blackscreen").remove();
     });
+    document.querySelector("#trumpet").play();
     document.querySelector(".blackscreen").classList.add("active");
     settings.isHackedTheSystem = true;
     const fullname = 'Miguel German "Mich" Gonzalez';
