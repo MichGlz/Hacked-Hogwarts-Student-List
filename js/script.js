@@ -65,6 +65,8 @@ function calculateHeaderHeight() {
   document.documentElement.style.setProperty("--headerheight", `${headerHeight}px`);
 }
 
+/////////////////////////////////model///////////////////////////
+
 function fetchLists() {
   let urlStudents = "https://petlatkea.dk/2021/hogwarts/students.json";
   let urlFamilyArrays = "https://petlatkea.dk/2021/hogwarts/families.json";
@@ -300,6 +302,11 @@ function createID(n) {
   }
 }
 
+function getStudentId(e) {
+  const studentID = e.target.dataset.id;
+  displayModalInfo(studentID);
+}
+
 ////////////////////////////////display/////////////////////////////
 
 function displayList(list) {
@@ -359,29 +366,18 @@ function displayList(list) {
     studentUL.appendChild(emptyLi);
   }
 
-  displayNumbers();
+  displayNumbers(list);
 }
 
-function displayNumbers() {
-  if (settings.isExpelledList) {
-    const numberOfStudentsGryffindor = arrayOfStudentObject.filter((student) => student.house === "Gryffindor" && student.expelled).length;
-    document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
-    const numberOfStudentsHufflepuff = arrayOfStudentObject.filter((student) => student.house === "Hufflepuff" && student.expelled).length;
-    document.querySelector("#no-hufflepuff").textContent = numberOfStudentsHufflepuff;
-    const numberOfStudentsRavenclaw = arrayOfStudentObject.filter((student) => student.house === "Ravenclaw" && student.expelled).length;
-    document.querySelector("#no-ravenclaw").textContent = numberOfStudentsRavenclaw;
-    const numberOfStudentsSlytherin = arrayOfStudentObject.filter((student) => student.house === "Slytherin" && student.expelled).length;
-    document.querySelector("#no-slytherin").textContent = numberOfStudentsSlytherin;
-  } else {
-    const numberOfStudentsGryffindor = arrayOfStudentObject.filter((student) => student.house === "Gryffindor" && !student.expelled).length;
-    document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
-    const numberOfStudentsHufflepuff = arrayOfStudentObject.filter((student) => student.house === "Hufflepuff" && !student.expelled).length;
-    document.querySelector("#no-hufflepuff").textContent = numberOfStudentsHufflepuff;
-    const numberOfStudentsRavenclaw = arrayOfStudentObject.filter((student) => student.house === "Ravenclaw" && !student.expelled).length;
-    document.querySelector("#no-ravenclaw").textContent = numberOfStudentsRavenclaw;
-    const numberOfStudentsSlytherin = arrayOfStudentObject.filter((student) => student.house === "Slytherin" && !student.expelled).length;
-    document.querySelector("#no-slytherin").textContent = numberOfStudentsSlytherin;
-  }
+function displayNumbers(list) {
+  const numberOfStudentsGryffindor = list.filter((student) => student.house === "Gryffindor").length;
+  document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
+  const numberOfStudentsHufflepuff = list.filter((student) => student.house === "Hufflepuff").length;
+  document.querySelector("#no-hufflepuff").textContent = numberOfStudentsHufflepuff;
+  const numberOfStudentsRavenclaw = list.filter((student) => student.house === "Ravenclaw").length;
+  document.querySelector("#no-ravenclaw").textContent = numberOfStudentsRavenclaw;
+  const numberOfStudentsSlytherin = list.filter((student) => student.house === "Slytherin").length;
+  document.querySelector("#no-slytherin").textContent = numberOfStudentsSlytherin;
 
   const numberOfStudentsActive = arrayOfStudentObject.filter((student) => !student.expelled).length;
   document.querySelector("#no-active").textContent = numberOfStudentsActive;
@@ -389,11 +385,9 @@ function displayNumbers() {
   document.querySelector("#no-expelled").textContent = numberOfStudentsExpelled;
   const numberOfStudentsDisplayed = document.querySelectorAll("#student-list li").length;
   document.querySelector("#no-displayed").textContent = numberOfStudentsDisplayed;
-}
-
-function getStudentId(e) {
-  const studentID = e.target.dataset.id;
-  displayModalInfo(studentID);
+  if (document.querySelector(".emptyList")) {
+    document.querySelector("#no-displayed").textContent = 0;
+  }
 }
 
 function displayModalInfo(studentID) {
@@ -507,10 +501,10 @@ function displayModalInfo(studentID) {
     setTimeout(removeModal, 600);
     if (studentID === "007") {
       document.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/gonzalez_m2.png)`;
+      document.querySelector("#thunder").play();
       setTimeout(() => {
         studentObj.expelled = false;
         displayModalInfo(studentID);
-        alert(`${studentObj.firstName} can't be expelled!`); //to do a message!!
       }, 1700);
     }
   });
@@ -529,28 +523,6 @@ function removeInquisitorBadge(studentObj) {
     document.querySelector(".inquisitorial").style.filter = `saturate(0) opacity(0)`;
     document.querySelector(".inquisitorial").style.transform = `translate(-25vw,-10vw) rotate(190deg) scale(0.1)`;
   }, 500);
-}
-
-function tryToMakeAPrefect(studentSelected) {
-  const studentsInHouse = arrayOfStudentObject.filter((student) => student.house === studentSelected.house);
-  const prefectsInHouse = studentsInHouse.filter((student) => student.prefect);
-  const numberOfprefects = prefectsInHouse.length;
-
-  if (numberOfprefects < 2) {
-    studentSelected.prefect = true;
-  } else {
-    const studentA = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[0]._id);
-    const studentB = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[1]._id);
-    displayWarningPrefects(studentSelected, studentA, studentB);
-  }
-}
-
-function studentSelectedToPrefect(theOtherStudent, studentSelected) {
-  theOtherStudent.prefect = false;
-  studentSelected.prefect = true;
-  refreshModal(studentSelected._id);
-  document.querySelector(".alert").remove();
-  document.querySelector(".smsboxwrapper").remove();
 }
 
 function displayWarningPrefects(studentSelected, studentA, studentB) {
@@ -622,7 +594,31 @@ function removeApear(e) {
   settings.isModalInfo = true;
 }
 
-////////////////search bar////////////////////////////////////////////////
+////////////////////////controler/////////////////////////
+
+function tryToMakeAPrefect(studentSelected) {
+  const studentsInHouse = arrayOfStudentObject.filter((student) => student.house === studentSelected.house);
+  const prefectsInHouse = studentsInHouse.filter((student) => student.prefect);
+  const numberOfprefects = prefectsInHouse.length;
+
+  if (numberOfprefects < 2) {
+    studentSelected.prefect = true;
+  } else {
+    const studentA = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[0]._id);
+    const studentB = arrayOfStudentObject.find((student) => student._id === prefectsInHouse[1]._id);
+    displayWarningPrefects(studentSelected, studentA, studentB);
+  }
+}
+
+function studentSelectedToPrefect(theOtherStudent, studentSelected) {
+  theOtherStudent.prefect = false;
+  studentSelected.prefect = true;
+  refreshModal(studentSelected._id);
+  document.querySelector(".alert").remove();
+  document.querySelector(".smsboxwrapper").remove();
+}
+
+//--------------------search bar-----------------
 function setSearchBar(e) {
   let word = e.target.value.toLowerCase();
   settings.SearchBarStr = word;
@@ -642,7 +638,7 @@ function SearchBar(newList) {
   return searchList;
 }
 
-////////////////////////filter & sort///////////////////////////////
+//---------------------filter & sort-----------------
 function setFilter() {
   document.querySelectorAll(".filtersWrapper select").forEach((select, i) => {
     settings[`valueToFilter${i + 1}`] = select.value;
