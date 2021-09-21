@@ -612,16 +612,16 @@ footer {
 /*------------------*/
 .blackscreen.active {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: -100vh;
+  left: -100vw;
+  width: 300vw;
+  height: 300vh;
   z-index: 10;
   background-color: #000000;
   opacity: 0;
   animation: blinck;
-  animation-iteration-count: 20;
-  animation-duration: 0.2s;
+  animation-iteration-count: 15;
+  animation-duration: 0.3s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
   pointer-events: none;
@@ -631,15 +631,17 @@ footer {
   0% {
     background-color: #000;
     background-image: url(../assets/skull.png);
-    background-size: 50%;
+    background-size: 20%;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.4;
+    opacity: 0.1;
+    transform: rotate(10deg);
   }
   100% {
     background-size: 40%;
     background-color: #f7f7f7;
     background-position: center;
     opacity: 0;
+    transform: rotate(-10deg);
   }
 }

@@ -366,10 +366,10 @@ function displayList(list) {
     studentUL.appendChild(emptyLi);
   }
 
-  displayNumbers(list);
+  displayQuantities(list);
 }
 
-function displayNumbers(list) {
+function displayQuantities(list) {
   const numberOfStudentsGryffindor = list.filter((student) => student.house === "Gryffindor").length;
   document.querySelector("#no-gryffindor").textContent = numberOfStudentsGryffindor;
   const numberOfStudentsHufflepuff = list.filter((student) => student.house === "Hufflepuff").length;
@@ -501,7 +501,9 @@ function displayModalInfo(studentID) {
     setTimeout(removeModal, 600);
     if (studentID === "007") {
       document.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/gonzalez_m2.png)`;
-      document.querySelector("#thunder").play();
+      const thunder = document.querySelector("#thunder");
+      thunder.volume = 0.1;
+      thunder.play();
       setTimeout(() => {
         studentObj.expelled = false;
         displayModalInfo(studentID);
@@ -566,7 +568,7 @@ function displayTheOtherList() {
     listH1.textContent = "Active Studentes";
   }
   resetFilters();
-  buildList();
+  // buildList();
 }
 
 function refreshModal(studentID) {
@@ -631,7 +633,7 @@ function setSearchBar(e) {
   }
   buildList();
 }
-function SearchBar(newList) {
+function searchBar(newList) {
   // let newList = buildList();
   let searchList = newList.filter((student) => student.firstName.toLowerCase().includes(settings.SearchBarStr) || student.lastName.toLowerCase().includes(settings.SearchBarStr) || student.middleName.toLowerCase().includes(settings.SearchBarStr));
   // displayList(searchList);
@@ -734,7 +736,7 @@ function buildList() {
     recalculateBloodStatus();
   }
   const currentList = filterList(arrayOfStudentObject);
-  const searchedList = SearchBar(currentList);
+  const searchedList = searchBar(currentList);
   const sortedList = sortList(searchedList);
 
   displayList(sortedList);
@@ -748,7 +750,10 @@ function hackTheSystem() {
     document.querySelector(".blackscreen").addEventListener("animationend", () => {
       document.querySelector(".blackscreen").remove();
     });
-    document.querySelector("#trumpet").play();
+    const trumpet = document.querySelector("#trumpet");
+    trumpet.volume = 0.2;
+    trumpet.play();
+
     document.querySelector(".blackscreen").classList.add("active");
     settings.isHackedTheSystem = true;
     const fullname = 'Miguel German "Mich" Gonzalez';
