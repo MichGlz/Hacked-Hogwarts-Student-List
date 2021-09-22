@@ -764,9 +764,9 @@ function hackTheSystem() {
     settings.isHackedTheSystem = true;
     const fullname = 'Miguel German "Mich" Gonzalez';
     const house = "Ravenclaw";
-
     pushMyStudentObject(fullname, house);
     recalculateBloodStatus();
+    resetFilters();
   }
 }
 
