@@ -502,6 +502,7 @@ function displayModalInfo(studentID) {
     if (studentID === "007") {
       document.querySelector(".studentpic").style.backgroundImage = `url(./assets/students/gonzalez_m2.png)`;
       const thunder = document.querySelector("#thunder");
+      thunder.currentTime = 0;
       thunder.volume = 0.1;
       thunder.play();
       setTimeout(() => {
@@ -688,6 +689,8 @@ function resetFilters() {
   filters.forEach((select) => {
     select.value = "all";
   });
+  document.querySelector("#search-names").value = "";
+  settings.SearchBarStr = "";
   setFilter();
 }
 
@@ -750,9 +753,6 @@ function hackTheSystem() {
     document.querySelector(".blackscreen").addEventListener("animationend", () => {
       document.querySelector(".blackscreen").remove();
     });
-    const trumpet = document.querySelector("#trumpet");
-    trumpet.volume = 0.2;
-    trumpet.play();
 
     document.querySelector(".blackscreen").classList.add("active");
     settings.isHackedTheSystem = true;
