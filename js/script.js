@@ -496,6 +496,12 @@ function displayModalInfo(studentID) {
       studentObj.inquisitor = false;
       studentObj.prefect = false;
       studentObj.quidditchPlayer = false;
+      const stamp = document.querySelector("#stamp");
+      stamp.currentTime = 0;
+      stamp.currentTime = 0.056;
+      stamp.volume = 0.5;
+      stamp.play();
+      document.querySelector(".expelledStamp").classList.add("stamped");
     }
     refreshModal(studentID);
     setTimeout(removeModal, 600);

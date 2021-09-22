@@ -407,7 +407,7 @@ li.emptyList {
 }
 
 .expelled:hover {
-  background-image: url(../assets/expelled.png);
+  background-image: url(../assets/expel.png);
   filter: saturate(1);
 }
 
