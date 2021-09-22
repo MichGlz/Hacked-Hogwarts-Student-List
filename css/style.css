@@ -612,16 +612,18 @@ footer {
 /*------------------*/
 .blackscreen.active {
   position: fixed;
-  top: -100vh;
-  left: -100vw;
-  width: 300vw;
-  height: 300vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 10;
-  background-color: #000000;
+
+  background-repeat: no-repeat;
+  background-position: center;
   opacity: 0;
   animation: blinck;
-  animation-iteration-count: 15;
-  animation-duration: 0.3s;
+  animation-iteration-count: 6;
+  animation-duration: 0.5s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
   pointer-events: none;
@@ -629,19 +631,21 @@ footer {
 
 @keyframes blinck {
   0% {
-    background-color: #000;
-    background-image: url(../assets/skull.png);
-    background-size: 20%;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.1;
+    background-image: url(../assets/skull01.png);
+    background-size: 40%;
+    opacity: 0.2;
     transform: rotate(10deg);
   }
-  100% {
-    background-size: 40%;
-    background-color: #f7f7f7;
-    background-position: center;
-    opacity: 0;
+
+  50% {
     transform: rotate(-10deg);
+    background-image: url(../assets/skull02.png);
+  }
+
+  100% {
+    background-image: url(../assets/skull01.png);
+    background-size: 40%;
+    opacity: 0.1;
+    transform: rotate(10deg);
   }
 }
