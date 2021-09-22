@@ -109,11 +109,11 @@ main {
 }
 
 .logo {
+  position: relative;
   width: 100%;
   height: 30vh;
   background-image: url(../assets/hogwarts-crest.png);
   background-size: contain;
-
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -575,13 +575,22 @@ aside {
   top: var(--headerheight);
   left: 2rem;
   z-index: var(--headerZindex);
+  width: 100%;
+  pointer-events: none;
 }
 
-aside h2 {
+aside h2,
+.symbolsWrapper h2 {
   font-family: roboto;
   font-family: "Life Savers", cursive;
   margin-top: 2rem;
   font-weight: lighter;
+}
+
+.symbolsWrapper {
+  position: absolute;
+  right: 5vw;
+  top: 0;
 }
 
 th,
