@@ -795,8 +795,8 @@ function recalculateBloodStatus() {
   arrayOfStudentObject.forEach((student) => {
     student.bloodType = bloodStatus(student.lastName);
     if (student.bloodType === "pure") {
-      const types = ["muggle", "half", "pure", "half", "muggle", "pure"];
-      const randomNumber = Math.floor(Math.random() * 6);
+      const types = ["muggle", "half", "pure"];
+      const randomNumber = Math.floor(Math.random() * 3);
       student.bloodType = types[randomNumber];
     } else {
       student.bloodType = "pure";

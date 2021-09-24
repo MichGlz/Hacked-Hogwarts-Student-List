@@ -626,19 +626,41 @@ footer {
   width: 100vw;
   height: 100vh;
   z-index: 10;
-
+  background-color: rgba(0, 0, 0, 0.753);
+  background-image: url(../assets/rayo2.svg);
+  background-size: 50%;
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
-  animation: blinck;
+  /* animation: blinck;
   animation-iteration-count: 6;
   animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards; */
+  animation: banish;
+  animation-iteration-count: 1;
+  animation-duration: 3.2s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
   pointer-events: none;
 }
 
-@keyframes blinck {
+@keyframes banish {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* @keyframes blinck {
   0% {
     background-image: url(../assets/skull01.png);
     background-size: 40%;
@@ -657,4 +679,4 @@ footer {
     opacity: 0.1;
     transform: rotate(10deg);
   }
-}
+} */
